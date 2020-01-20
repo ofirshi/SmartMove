@@ -3491,6 +3491,8 @@ namespace JuniperMigration
             // Resolve the conversion categories/lines count to report to the user.
             ConversionIncidentCategoriesCount = _conversionIncidents.GroupBy(error => error.Title).Count();
             ConversionIncidentsCommandsCount = _conversionIncidents.GroupBy(error => error.LineNumber).Count();
+			
+            GeneratingSmartConnector();
         }
         
         public override int RulesInConvertedPackage()
