@@ -231,6 +231,13 @@ namespace MigrationBase
                 }
             }
 
+            string compressorsDirPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "compressors";
+            string compressorZip = Path.Combine(compressorsDirPath, "zip.exe");
+            string compressorGtar = Path.Combine(compressorsDirPath, "gtar.exe");
+            string compressorGzip = Path.Combine(compressorsDirPath, "gzip.exe");
+            if (!File.Exists(compressorZip) || !File.Exists(compressorGtar) || !File.Exists(compressorGzip))
+                isGeneratingSC = false;
+
             if (isGeneratingSC)
             {
                 Console.WriteLine("SIZE = " + _cpObjects.ToString());
@@ -336,8 +343,6 @@ namespace MigrationBase
                 File.Copy(cpObjectsJsonFP, smartConnectorArchivePath + Path.DirectorySeparatorChar + cpObjectsJsonFN);
                 #endregion
 
-                string compressorsDirPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "compressors";
-
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.UseShellExecute = false;
                 startInfo.CreateNoWindow = true;
@@ -347,7 +352,7 @@ namespace MigrationBase
                 if (File.Exists(smartConnectorArchivePath + ".zip"))
                     File.Delete(smartConnectorArchivePath + ".zip");
 
-                startInfo.FileName = Path.Combine(compressorsDirPath, "zip.exe");
+                startInfo.FileName = compressorZip;
                 startInfo.WorkingDirectory = _targetFolder + Path.DirectorySeparatorChar + smartConnectorArchiveName;
                 startInfo.Arguments = "-r" + " ..\\" + smartConnectorArchiveName + ".zip" + " *";
                 compressProc = Process.Start(startInfo);
@@ -358,21 +363,21 @@ namespace MigrationBase
                 if (File.Exists(smartConnectorArchivePath + ".tar.gz"))
                     File.Delete(smartConnectorArchivePath + ".tar.gz");
 
-                startInfo.FileName = Path.Combine(compressorsDirPath, "gtar.exe");
+                startInfo.FileName = compressorGtar;
                 startInfo.WorkingDirectory = _targetFolder + Path.DirectorySeparatorChar + smartConnectorArchiveName;
                 startInfo.Arguments = "cf" + " ..\\" + smartConnectorArchiveName + ".tar" + " *";
                 compressProc = Process.Start(startInfo);
                 compressProc.WaitForExit();
 
-                startInfo.FileName = Path.Combine(compressorsDirPath, "gzip.exe");
+                startInfo.FileName = compressorGzip;
                 startInfo.WorkingDirectory = _targetFolder;
                 startInfo.Arguments = smartConnectorArchiveName + ".tar";
                 compressProc = Process.Start(startInfo);
                 compressProc.WaitForExit();
                 #endregion
 
-                //if (File.Exists(cpObjectsJsonFP))
-                //    File.Delete(cpObjectsJsonFP);
+                if (File.Exists(cpObjectsJsonFP))
+                    File.Delete(cpObjectsJsonFP);
 
                 if (Directory.Exists(smartConnectorArchivePath))
                     Directory.Delete(smartConnectorArchivePath, true);
