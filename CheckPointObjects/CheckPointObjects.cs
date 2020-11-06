@@ -236,6 +236,7 @@ namespace CheckPointObjects
     {
         public string Subnet { get; set; }
         public string Netmask { get; set; }
+        public string MaskLenght { get; set; }
 
         public override IPRanges GetIPRanges()
         {
@@ -246,13 +247,14 @@ namespace CheckPointObjects
         {
             return "add network " + WriteParam("name", SafeName(), "") + WriteParam("comments", Comments, "")
                 + WriteParam("subnet", Subnet, "")
-                + WriteParam("subnet-mask", Netmask , "")
+                + WriteParam("subnet-mask", Netmask, "")
+                + WriteParam("mask-length", MaskLenght, "")
                 + WriteListParam("tags", Tags, true);
         }
 
         public override string ToCLIScriptInstruction()
         {
-            return "create network [" + Name + "]: subnet [" + Subnet + "] mask [" + Netmask + "]";
+            return "create network [" + Name + "]: subnet [" + Subnet + "] mask [" + Netmask + "] mask-lenght [" + MaskLenght + "]";
         }
     }
 
@@ -521,7 +523,7 @@ namespace CheckPointObjects
         public string EndDate { get; set; }
         public string EndTime { get; set; }
         public double EndPosix { get; set; }
-        
+
         public bool HoursRangesEnabled_1 { get; set; }
         public string HoursRangesFrom_1 { get; set; }
         public string HoursRangesTo_1 { get; set; }
@@ -541,25 +543,25 @@ namespace CheckPointObjects
         public override string ToCLIScript()
         {
             return "add time " + WriteParam("name", SafeName(), "") + WriteParam("comments", Comments, "")
-                
-                + WriteParam("start-now", StartNow.ToString().ToLower(), "") 
-                + WriteParam("start.date", StartDate, "") 
+
+                + WriteParam("start-now", StartNow.ToString().ToLower(), "")
+                + WriteParam("start.date", StartDate, "")
                 + WriteParam("start.time", StartTime, "")
                 + WriteParam("start.posix", (StartPosix > 0 ? "" + StartPosix : ""), "")
 
-                + WriteParam("end-never", EndNever.ToString().ToLower(), "") 
-                + WriteParam("end.date", EndDate, "") 
+                + WriteParam("end-never", EndNever.ToString().ToLower(), "")
+                + WriteParam("end.date", EndDate, "")
                 + WriteParam("end.time", EndTime, "")
                 + WriteParam("end.posix", (EndPosix > 0 ? "" + EndPosix : ""), "")
 
-                + WriteParam("hours-ranges.1.enabled", (HoursRangesEnabled_1 ? HoursRangesEnabled_1.ToString().ToLower() : ""), "") 
-                + WriteParam("hours-ranges.1.from", HoursRangesFrom_1, "") 
+                + WriteParam("hours-ranges.1.enabled", (HoursRangesEnabled_1 ? HoursRangesEnabled_1.ToString().ToLower() : ""), "")
+                + WriteParam("hours-ranges.1.from", HoursRangesFrom_1, "")
                 + WriteParam("hours-ranges.1.to", HoursRangesTo_1, "")
 
                 + WriteParam("hours-ranges.2.enabled", (HoursRangesEnabled_2 ? HoursRangesEnabled_2.ToString().ToLower() : ""), "")
                 + WriteParam("hours-ranges.2.from", HoursRangesFrom_2, "")
-                + WriteParam("hours-ranges.2.to", HoursRangesTo_2, "") 
-                
+                + WriteParam("hours-ranges.2.to", HoursRangesTo_2, "")
+
                 + WriteParam("hours-ranges.3.enabled", (HoursRangesEnabled_3 ? HoursRangesEnabled_3.ToString().ToLower() : ""), "")
                 + WriteParam("hours-ranges.3.from", HoursRangesFrom_3, "")
                 + WriteParam("hours-ranges.3.to", HoursRangesTo_3, "")
@@ -608,7 +610,7 @@ namespace CheckPointObjects
 
         public override string ToCLIScript()
         {
-            if(Networks.Count == 0)
+            if (Networks.Count == 0)
             {
                 Networks.Add("any");
             }
@@ -662,7 +664,7 @@ namespace CheckPointObjects
             DestinationNegated = false;
             ConversionComments = "";
         }
-        
+
         public override string ToCLIScript()
         {
             string actionName = "";
@@ -720,7 +722,7 @@ namespace CheckPointObjects
             newRule.ConvertedCommandId = ConvertedCommandId;
             newRule.ConversionIncidentType = ConversionIncidentType;
 
-            foreach(CheckPointObject obj in Source)
+            foreach (CheckPointObject obj in Source)
             {
                 newRule.Source.Add(obj);
             }
@@ -744,7 +746,7 @@ namespace CheckPointObjects
         public bool CompareTo(CheckPoint_Rule other)
         {
             if (Enabled != other.Enabled ||
-                Action != other.Action || 
+                Action != other.Action ||
                 Track != other.Track ||
                 SourceNegated != other.SourceNegated ||
                 DestinationNegated != other.DestinationNegated)
@@ -775,7 +777,7 @@ namespace CheckPointObjects
 
             if ((Source.Count == 1 && Source[0].Name == Any) &&
                 (Destination.Count == 1 && Destination[0].Name == Any) &&
-                (Service.Count == 1 && Service[0].Name == Any) && 
+                (Service.Count == 1 && Service[0].Name == Any) &&
                 IsApplicationsClean() &&
                 (Action == ActionType.Drop))
             {
@@ -842,7 +844,8 @@ namespace CheckPointObjects
         //specific extension for cloning applications
         protected override void CloneApplicationsToRule(CheckPoint_Rule newRule)
         {
-            if (newRule is CheckPoint_RuleWithApplication) {
+            if (newRule is CheckPoint_RuleWithApplication)
+            {
                 foreach (CheckPointObject obj in Application)
                 {
                     ((CheckPoint_RuleWithApplication)newRule).Application.Add(obj);
@@ -857,7 +860,7 @@ namespace CheckPointObjects
             {
                 return CompareLists(Application, ((CheckPoint_RuleWithApplication)other).Application);
             }
-           
+
             return false;
         }
 
@@ -953,8 +956,8 @@ namespace CheckPointObjects
 
     public class CheckPoint_Package : CheckPointObject
     {
-        public string NameOfAccessLayer 
-        { 
+        public string NameOfAccessLayer
+        {
             get { return Name + " Network"; }
         }
 
