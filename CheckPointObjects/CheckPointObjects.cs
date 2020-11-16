@@ -118,6 +118,11 @@ namespace CheckPointObjects
 
         protected static string WriteListParam(string paramName, List<string> paramValues, bool useSafeNames, int firstIndex, int maxSize)
         {
+            return WriteListParam(paramName, paramValues, useSafeNames, firstIndex, maxSize, "");
+        }
+
+        protected static string WriteListParam(string paramName, List<string> paramValues, bool useSafeNames, int firstIndex, int maxSize, string suffix)
+        {
             if (paramValues.Count == 0 || firstIndex >= paramValues.Count || maxSize <= 0)
             {
                 return "";
@@ -133,7 +138,7 @@ namespace CheckPointObjects
             for (int i = firstIndex; i < maxIndex; i++)
             {
                 string value = useSafeNames ? paramValues[i] : GetSafeName(paramValues[i]);
-                sb.AppendFormat("{0}.{1} \"{2}\" ", paramName, i, value);
+                sb.AppendFormat("{0}{1}.{2} \"{3}\" ", paramName, suffix, i, value);
             }
 
             return sb.ToString();
@@ -303,7 +308,7 @@ namespace CheckPointObjects
         public override string ToCLIScript()
         {
             return (MembersPublishIndex == 0 ? "add " : "set ") + "group " + WriteParam("name", SafeName(), "") + WriteParam("comments", Comments, "")
-                + WriteListParam("members", Members, true, MembersPublishIndex, MembersMaxPublishSize)
+                + WriteListParam("members", Members, true, MembersPublishIndex, MembersMaxPublishSize, MembersPublishIndex == 0 ? "" : ".add")
                 + WriteListParam("tags", Tags, true);
         }
 
@@ -495,7 +500,7 @@ namespace CheckPointObjects
         public override string ToCLIScript()
         {
             return (MembersPublishIndex == 0 ? "add " : "set ") + "service-group " + WriteParam("name", SafeName(), "") + WriteParam("comments", Comments, "")
-                + WriteListParam("members", Members, true, MembersPublishIndex, MembersMaxPublishSize)
+                + WriteListParam("members", Members, true, MembersPublishIndex, MembersMaxPublishSize, MembersPublishIndex == 0 ? "" : ".add")
                 + WriteListParam("tags", Tags, true);
         }
 
