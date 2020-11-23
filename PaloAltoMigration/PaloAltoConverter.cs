@@ -171,7 +171,7 @@ namespace PaloAltoMigration
                 }
             }
 
-            if(appsItems != null)
+            if (appsItems != null)
             {
                 foreach (CheckPointObject item in appsItems)
                 {
@@ -328,7 +328,8 @@ namespace PaloAltoMigration
                                         file.WriteLine("      <td>" + subRule.Name + "</td>");
                                         file.WriteLine("      <td>" + RuleItemsList2Html(subRule.Source, subRule.SourceNegated, CheckPointObject.Any, ref ruleConversionIncidentType) + "</td>");
                                         file.WriteLine("      <td>" + RuleItemsList2Html(subRule.Destination, subRule.DestinationNegated, CheckPointObject.Any, ref ruleConversionIncidentType) + "</td>");
-/* */                                   file.WriteLine("      <td>" + RuleItemsList2Html_pa(subRule.Service, subRuleAppsList, false, CheckPointObject.Any, ref ruleConversionIncidentType) + "</td>");
+                                        /* */
+                                        file.WriteLine("      <td>" + RuleItemsList2Html_pa(subRule.Service, subRuleAppsList, false, CheckPointObject.Any, ref ruleConversionIncidentType) + "</td>");
                                         file.WriteLine("      <td class='" + subRule.Action.ToString().ToLower() + "'>" + subRule.Action.ToString() + "</td>");
                                         file.WriteLine("      <td>" + RuleItemsList2Html(subRule.Time, false, CheckPointObject.Any, ref ruleConversionIncidentType) + "</td>");
                                         file.WriteLine("      <td>" + subRule.Track.ToString() + "</td>");
@@ -817,16 +818,16 @@ namespace PaloAltoMigration
                 }
                 if (paConfig.Devices != null)
                 {
-                    if(paConfig.Devices.DevicesEntry != null && paConfig.Devices.DevicesEntry.Name.Equals(LOCAL_DEVICE_ENTRY_NAME)) //we parse PA config from PA
+                    if (paConfig.Devices.DevicesEntry != null && paConfig.Devices.DevicesEntry.Name.Equals(LOCAL_DEVICE_ENTRY_NAME)) //we parse PA config from PA
                     {
-                        if(paConfig.Devices.DevicesEntry.Vsys != null && 
-                            paConfig.Devices.DevicesEntry.Vsys.VsysEntries != null && 
+                        if (paConfig.Devices.DevicesEntry.Vsys != null &&
+                            paConfig.Devices.DevicesEntry.Vsys.VsysEntries != null &&
                             paConfig.Devices.DevicesEntry.Vsys.VsysEntries.Count > 0)
                         {
                             if (paConfig.Devices.DevicesEntry.Vsys.VsysEntries.Count == 1)
                             {
                                 ConvertPaVsysEntry(targetFolderMain, targetFileNameMain, paConfig.Devices.DevicesEntry.Vsys.VsysEntries[0],
-                                                    s_TagEntries, 
+                                                    s_TagEntries,
                                                     s_cpAddressesDict,
                                                     s_cpNetGroupsDict,
                                                     s_cpServicesDict,
@@ -845,7 +846,7 @@ namespace PaloAltoMigration
                                     string targetFolderVsys = targetFolderMain + "\\" + paVsysName;
                                     System.IO.Directory.CreateDirectory(targetFolderVsys);
                                     ConvertPaVsysEntry(targetFolderVsys, paVsysName, paVsysEntry,
-                                                        s_TagEntries, 
+                                                        s_TagEntries,
                                                         s_cpAddressesDict,
                                                         s_cpNetGroupsDict,
                                                         s_cpServicesDict,
@@ -887,13 +888,13 @@ namespace PaloAltoMigration
         }
 
         public void ConvertPaVsysEntry(string targetFolderNew, string targetFileNameNew, PA_VsysEntry paVsysEntry,
-                                        List<PA_TagEntry> s_TagEntries, 
+                                        List<PA_TagEntry> s_TagEntries,
                                         Dictionary<string, CheckPointObject> s_cpAddressesDict,
                                         Dictionary<string, CheckPoint_NetworkGroup> s_cpNetGroupsDict,
                                         Dictionary<string, CheckPointObject> s_cpServicesDict,
                                         Dictionary<string, string> s_paServicesTypesDict,
                                         Dictionary<string, CheckPoint_ServiceGroup> s_cpServicesGroupsDict,
-                                        List<string> s_paAppFiltersList, 
+                                        List<string> s_paAppFiltersList,
                                         Dictionary<string, CheckPoint_ApplicationGroup> s_cpAppGroupsDict,
                                         Dictionary<string, List<CheckPoint_Time>> s_cpSchedulesDict)
         {
@@ -926,7 +927,7 @@ namespace PaloAltoMigration
 
             List<string> paAppFiltersList = GetPAApplicationsFilters(paVsysEntry, s_paAppFiltersList);
 
-            Dictionary<string, CheckPoint_ApplicationGroup> cpAppGroupsDict = 
+            Dictionary<string, CheckPoint_ApplicationGroup> cpAppGroupsDict =
                 ConvertApplicationsGroups(new List<PA_ApplicationGroupEntry>(paVsysEntry.ApplicationGroupsEntries), appsMatchList, s_cpAppGroupsDict, paAppFiltersList);
 
             Dictionary<string, List<CheckPoint_Time>> cpSchedulesDict = null;
@@ -1072,14 +1073,14 @@ namespace PaloAltoMigration
                 _warningsList.Add(objName + " " + objType.Trim() + " was renamed to " + objNameNew);
                 objName = objNameNew;
             }
-			
+
             objNameNew = GetSafeName(objName);
-            if(!objNameNew.Equals(objName))
+            if (!objNameNew.Equals(objName))
             {
                 _warningsList.Add(objName + " " + objType.Trim() + " was renamed to " + objNameNew);
                 objName = objNameNew;
             }
-			
+
             if (!_objectsNamesSet.Add(objName.ToLower()))
             {
                 objNameNew = objName + "_" + _numPostfix++;
@@ -1126,9 +1127,9 @@ namespace PaloAltoMigration
             else
                 cpAddressesDict = new Dictionary<string, CheckPointObject>();
 
-            if(paObjects.AddressEntries != null)
+            if (paObjects.AddressEntries != null)
             {
-                foreach(PA_AddressEntry paAddressEntry in paObjects.AddressEntries)
+                foreach (PA_AddressEntry paAddressEntry in paObjects.AddressEntries)
                 {
                     if (!string.IsNullOrWhiteSpace(paAddressEntry.IpNetmask))
                     {
@@ -1150,7 +1151,14 @@ namespace PaloAltoMigration
                             cpNetwork.Comments = paAddressEntry.Description;
                             cpNetwork.Tags = paAddressEntry.TagMembers;
                             cpNetwork.Subnet = paAddressEntry.IpNetmask.Substring(0, indexSlash);
-                            cpNetwork.Netmask = IPNetwork.Parse(paAddressEntry.IpNetmask).Netmask.ToString();
+                            if (NetworkUtils.IsValidIpv6(cpNetwork.Subnet))
+                            {
+                                cpNetwork.MaskLenght = paAddressEntry.IpNetmask.Substring(indexSlash + 1);
+                            }
+                            else
+                            {
+                                cpNetwork.Netmask = IPNetwork.Parse(paAddressEntry.IpNetmask).Netmask.ToString();
+                            }
                             cpAddressesDict[paAddressEntry.Name] = cpNetwork;
                         }
                         else if (indexSlash == -1)
@@ -1192,7 +1200,7 @@ namespace PaloAltoMigration
                         }
                         else
                         {
-                            cpDomain = (CheckPoint_Domain) (new List<CheckPointObject>(cpAddressesDict.Values))[index];
+                            cpDomain = (CheckPoint_Domain)(new List<CheckPointObject>(cpAddressesDict.Values))[index];
                         }
                         cpAddressesDict[paAddressEntry.Name] = cpDomain;
                     }
@@ -1209,7 +1217,7 @@ namespace PaloAltoMigration
             Dictionary<string, CheckPoint_NetworkGroup> cpAddressesGroupsDict = null;
             if (s_cpNetGroupsDict != null)
                 cpAddressesGroupsDict = new Dictionary<string, CheckPoint_NetworkGroup>(s_cpNetGroupsDict);
-            else 
+            else
                 cpAddressesGroupsDict = new Dictionary<string, CheckPoint_NetworkGroup>();
 
 
@@ -1232,7 +1240,7 @@ namespace PaloAltoMigration
 
             Dictionary<string, List<string>> tagsToMembersDict = GetDictTagsToNames(paObjects, s_TagEntries, cpAddressesList, cpNetGrpList);
 
-            if(paObjects.AddressGroupEntries != null)
+            if (paObjects.AddressGroupEntries != null)
             {
                 foreach (PA_AddressGroupEntry paAddressGroupEntry in paObjects.AddressGroupEntries)
                 {
@@ -1245,11 +1253,11 @@ namespace PaloAltoMigration
                     {
                         cpNetGroup.Members = paAddressGroupEntry.StaticMembers;
                     }
-                    else if(paAddressGroupEntry.Dynamic != null && !string.IsNullOrWhiteSpace(paAddressGroupEntry.Dynamic.Filter))
+                    else if (paAddressGroupEntry.Dynamic != null && !string.IsNullOrWhiteSpace(paAddressGroupEntry.Dynamic.Filter))
                     {
                         string adjustedFilter = paAddressGroupEntry.Dynamic.Filter.Trim('\'').Trim('"').Trim();
 
-                        if(tagsToMembersDict.ContainsKey(adjustedFilter))
+                        if (tagsToMembersDict.ContainsKey(adjustedFilter))
                         {
                             cpNetGroup.Members = tagsToMembersDict[adjustedFilter];
                         }
@@ -1260,7 +1268,7 @@ namespace PaloAltoMigration
                         }
                     }
 
-                    if(cpNetGroup != null)
+                    if (cpNetGroup != null)
                     {
                         cpAddressesGroupsDict[paAddressGroupEntry.Name] = cpNetGroup;
                     }
@@ -1270,7 +1278,7 @@ namespace PaloAltoMigration
             return cpAddressesGroupsDict;
         }
 
-        public Dictionary<string, List<string>> GetDictTagsToNames(PA_Objects paObjects, List<PA_TagEntry> s_TagEntries, 
+        public Dictionary<string, List<string>> GetDictTagsToNames(PA_Objects paObjects, List<PA_TagEntry> s_TagEntries,
                                                                     List<CheckPointObject> cpAddressesList, List<CheckPoint_NetworkGroup> cpNetGrpList)
         {
             Dictionary<string, List<string>> tagsToNamesDict = new Dictionary<string, List<string>>();
@@ -1316,12 +1324,12 @@ namespace PaloAltoMigration
             return tagsToNamesDict;
         }
 
-        public Dictionary<string, CheckPoint_NetworkGroup> ConvertAddressesGroupsWithInspection(PA_Objects paVsysEntry, 
+        public Dictionary<string, CheckPoint_NetworkGroup> ConvertAddressesGroupsWithInspection(PA_Objects paVsysEntry,
                                                                                                 Dictionary<string, CheckPointObject> cpAddressesDict,
-                                                                                                Dictionary<string, CheckPoint_NetworkGroup> s_cpNetGroupsDict, 
+                                                                                                Dictionary<string, CheckPoint_NetworkGroup> s_cpNetGroupsDict,
                                                                                                 List<PA_TagEntry> s_TagEntries)
         {
-            Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsList = 
+            Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsList =
                 ConvertAddressesGroups(paVsysEntry, s_TagEntries, (new List<CheckPointObject>(cpAddressesDict.Values)), s_cpNetGroupsDict);
 
             Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsResult = InspectAddressGroups(cpAddressesDict, cpNetGroupsList, null);
@@ -1329,7 +1337,7 @@ namespace PaloAltoMigration
             return cpNetGroupsResult;
         }
 
-        public Dictionary<string, CheckPoint_NetworkGroup> InspectAddressGroups(Dictionary<string, CheckPointObject> cpAddressesNamesDict, 
+        public Dictionary<string, CheckPoint_NetworkGroup> InspectAddressGroups(Dictionary<string, CheckPointObject> cpAddressesNamesDict,
                                                                                 Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsCheck,
                                                                                 Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsTemp)
         {
@@ -1405,7 +1413,7 @@ namespace PaloAltoMigration
                         {
                             for (int i = 0; i < paScheduleEntry.Type.Recurring.MembersDaily.Count; i += 3)
                             {
-                                List<string> timesList = 
+                                List<string> timesList =
                                     paScheduleEntry.Type.Recurring.MembersDaily.GetRange(i, Math.Min(3, paScheduleEntry.Type.Recurring.MembersDaily.Count - i));
 
                                 CheckPoint_Time cpTime = new CheckPoint_Time();
@@ -1647,7 +1655,7 @@ namespace PaloAltoMigration
                 cpTimeName = cpTimeName.Substring(0, 5) + "_t" + _timeCutterCounter++;
             }
 
-            if(!_timesNamesSet.Add(cpTimeName))
+            if (!_timesNamesSet.Add(cpTimeName))
             {
                 cpTimeName = cpTimeName.Substring(0, 5) + "_t" + _timeCutterCounter++;
             }
@@ -1694,7 +1702,7 @@ namespace PaloAltoMigration
             return paServicesTypesDict;
         }
 
-        public Dictionary<string, CheckPointObject> ConvertServices(PA_Objects paObjects, Dictionary<string, CheckPointObject> s_cpServicesDict) 
+        public Dictionary<string, CheckPointObject> ConvertServices(PA_Objects paObjects, Dictionary<string, CheckPointObject> s_cpServicesDict)
         {
             Dictionary<string, CheckPointObject> cpServicesDict = null;
             if (s_cpServicesDict != null)
@@ -1704,7 +1712,7 @@ namespace PaloAltoMigration
 
             GetPredefinedServices().ForEach(x => cpServicesDict[x.Name] = InspectService(x));
 
-            if(paObjects.ServiceEntries != null)
+            if (paObjects.ServiceEntries != null)
             {
                 foreach (PA_ServiceEntry paServiceEntry in paObjects.ServiceEntries)
                 {
@@ -1713,7 +1721,7 @@ namespace PaloAltoMigration
                         if (paServiceEntry.Protocol.ServiceTcp != null && paServiceEntry.Protocol.ServiceTcp.Port != null)
                         {
                             string srvName = paServiceEntry.Name;
-                            if(!char.IsLetter(paServiceEntry.Name[0]))
+                            if (!char.IsLetter(paServiceEntry.Name[0]))
                             {
                                 srvName = SERVICE_TYPE_TCP + "_" + paServiceEntry.Name;
                                 _warningsList.Add(paServiceEntry.Name + " service (TCP) was renamed to " + srvName);
@@ -1721,7 +1729,7 @@ namespace PaloAltoMigration
 
                             string[] ports = paServiceEntry.Protocol.ServiceTcp.Port.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                             string[] sourcePorts = new string[] { "" };
-                            if(paServiceEntry.Protocol.ServiceTcp.SourcePort != null)
+                            if (paServiceEntry.Protocol.ServiceTcp.SourcePort != null)
                             {
                                 sourcePorts = paServiceEntry.Protocol.ServiceTcp.SourcePort.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                             }
@@ -1897,7 +1905,7 @@ namespace PaloAltoMigration
                     cpServiceRet = cpUdpService;
                 }
             }
-            else if(cpService.GetType() == typeof(CheckPoint_ServiceGroup))
+            else if (cpService.GetType() == typeof(CheckPoint_ServiceGroup))
             {
                 cpServiceRet = cpService;
             }
@@ -1917,9 +1925,9 @@ namespace PaloAltoMigration
             else
                 cpServicesGroupsDict = new Dictionary<string, CheckPoint_ServiceGroup>();
 
-            if(paObjects.ServiceGroupEntries != null)
+            if (paObjects.ServiceGroupEntries != null)
             {
-                foreach(PA_ServiceGroupEntry paServiceGroupEntry in paObjects.ServiceGroupEntries)
+                foreach (PA_ServiceGroupEntry paServiceGroupEntry in paObjects.ServiceGroupEntries)
                 {
                     CheckPoint_ServiceGroup cpServiceGroup = new CheckPoint_ServiceGroup();
                     cpServiceGroup.Name = InspectObjectName(paServiceGroupEntry.Name, CP_OBJECT_TYPE_NAME_SERVICE_GROUP);
@@ -1945,11 +1953,11 @@ namespace PaloAltoMigration
             return cpServicesGroupsResult;
         }
 
-        public void InspectServicesGroups(Dictionary<string, CheckPointObject> cpServicesDict, 
-                                          Dictionary<string, CheckPoint_ServiceGroup> cpServicesGroupsCheck, 
+        public void InspectServicesGroups(Dictionary<string, CheckPointObject> cpServicesDict,
+                                          Dictionary<string, CheckPoint_ServiceGroup> cpServicesGroupsCheck,
                                           Dictionary<string, CheckPoint_ServiceGroup> cpServicesGroupsResult)
         {
-            while(cpServicesGroupsCheck.Count > 0)
+            while (cpServicesGroupsCheck.Count > 0)
             {
                 string paSrvGroupName = new List<string>(cpServicesGroupsCheck.Keys)[0];
                 CheckPoint_ServiceGroup cpSrvGroupCheck = cpServicesGroupsCheck[paSrvGroupName];
@@ -1960,7 +1968,7 @@ namespace PaloAltoMigration
             }
         }
 
-        public bool InspectServicesGroup(string paSrvGroupName, 
+        public bool InspectServicesGroup(string paSrvGroupName,
                                          CheckPoint_ServiceGroup cpServicesGroup,
                                          Dictionary<string, CheckPointObject> cpServicesDict,
                                          Dictionary<string, CheckPoint_ServiceGroup> cpServicesGroupsCheck,
@@ -1983,14 +1991,14 @@ namespace PaloAltoMigration
                 }
 
                 //group member is Services Group and converted already
-                if(cpServicesGroupsResult.ContainsKey(member))
+                if (cpServicesGroupsResult.ContainsKey(member))
                 {
                     cpServicesGroupNew.Members.Add(cpServicesGroupsResult[member].Name);
                     continue;
                 }
 
                 //group member is Services Group and not converted yet
-                if(cpServicesGroupsCheck.ContainsKey(member))
+                if (cpServicesGroupsCheck.ContainsKey(member))
                 {
                     CheckPoint_ServiceGroup cpSrvGroupNew = cpServicesGroupsCheck[member];
                     cpServicesGroupsCheck.Remove(member);
@@ -2022,7 +2030,7 @@ namespace PaloAltoMigration
             return new List<string>(File.ReadAllLines(PA_APPLICATIONS_FILE_NAME));
         }
 
-        public Dictionary<string, CheckPoint_ApplicationGroup> ConvertApplicationsGroups(List<PA_ApplicationGroupEntry> paAppsGroupsListCheck, 
+        public Dictionary<string, CheckPoint_ApplicationGroup> ConvertApplicationsGroups(List<PA_ApplicationGroupEntry> paAppsGroupsListCheck,
                                                                                          List<string> appsMatchList,
                                                                                          Dictionary<string, CheckPoint_ApplicationGroup> s_cpAppGroupDict,
                                                                                          List<string> paAppFiltersList)
@@ -2043,7 +2051,7 @@ namespace PaloAltoMigration
                     CheckPoint_ApplicationGroup cpAppGroup = new CheckPoint_ApplicationGroup();
                     cpAppGroup.Name = InspectObjectName(GetSafeName(paAppsGroupCheck.Name), CP_OBJECT_TYPE_NAME_APPLICATION_GROUP);
 
-                    foreach(string appMember in paAppsGroupCheck.ApplicationGroupMembers)
+                    foreach (string appMember in paAppsGroupCheck.ApplicationGroupMembers)
                     {
                         string matchedLine = appsMatchList.Find(x => x.StartsWith(appMember + ";"));
                         if (!string.IsNullOrEmpty(matchedLine))
@@ -2052,9 +2060,9 @@ namespace PaloAltoMigration
                             if (!string.IsNullOrWhiteSpace(matchedArray[1]))
                             {
                                 string[] matchedValues = matchedArray[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                foreach(string matchedValue in matchedValues)
+                                foreach (string matchedValue in matchedValues)
                                 {
-                                    if(!matchedValue.Trim().Equals(""))
+                                    if (!matchedValue.Trim().Equals(""))
                                     {
                                         cpAppGroup.Members.Add(matchedValue.Trim());
                                     }
@@ -2084,7 +2092,7 @@ namespace PaloAltoMigration
                         {
                             _warningsList.Add(paAppsGroupCheck.Name + " application group contains application filter: " + appMember);
                         }
-                        else if(paAppsGroupsListCheck.FindIndex(x => x.Name.Equals(appMember)) != -1)
+                        else if (paAppsGroupsListCheck.FindIndex(x => x.Name.Equals(appMember)) != -1)
                         {
                             cpAppGroupDict = ConvertApplicationsGroups(paAppsGroupsListCheck, appsMatchList, cpAppGroupDict, paAppFiltersList);
                             if (cpAppGroupDict.ContainsKey(appMember))
@@ -2117,9 +2125,9 @@ namespace PaloAltoMigration
             else
                 paAppFiltersList = new List<string>();
 
-            if(paObjects.ApplicationFiltersEntries != null)
+            if (paObjects.ApplicationFiltersEntries != null)
             {
-                foreach(PA_ApplicationFilterEntry paAppFilterEntry in paObjects.ApplicationFiltersEntries)
+                foreach (PA_ApplicationFilterEntry paAppFilterEntry in paObjects.ApplicationFiltersEntries)
                 {
                     paAppFiltersList.Add(paAppFilterEntry.Name);
                 }
@@ -2136,11 +2144,11 @@ namespace PaloAltoMigration
                                           Dictionary<string, CheckPoint_Zone> cpZonesDict,
                                           Dictionary<string, CheckPointObject> cpAddressesDict,
                                           Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsDict,
-                                          Dictionary<string, CheckPointObject> cpServicesDict, 
+                                          Dictionary<string, CheckPointObject> cpServicesDict,
                                           Dictionary<string, CheckPoint_ServiceGroup> cpServicesGroupsDict,
                                           List<string> appsMatchList,
                                           Dictionary<string, CheckPoint_ApplicationGroup> cpAppGroupsDict,
-                                          List<string> paAppFiltersList, 
+                                          List<string> paAppFiltersList,
                                           Dictionary<string, List<CheckPoint_Time>> cpSchedulesDict,
                                           Dictionary<string, CheckPoint_AccessRole> cpAccessRolesDict)
         {
@@ -2232,9 +2240,9 @@ namespace PaloAltoMigration
                     if (isPolicyPlain && !paSecurityRuleEntry.FromList.Contains(PA_ANY_VALUE)
                         && !(ConvertUserConf && paSecurityRuleEntry.SourceUserList != null && !paSecurityRuleEntry.SourceUserList.Contains(PA_ANY_VALUE)))
                     {
-                        paSecurityRuleEntry.FromList.ForEach(fromObj => 
+                        paSecurityRuleEntry.FromList.ForEach(fromObj =>
                         {
-                            if(cpZonesDict.ContainsKey(fromObj))
+                            if (cpZonesDict.ContainsKey(fromObj))
                             {
                                 CheckPoint_Zone cpZone = cpZonesDict[fromObj];
                                 cpRuleSourceList.Add(cpZone);
@@ -2457,7 +2465,7 @@ namespace PaloAltoMigration
                         }
                     }
 
-                    if(paSecurityRuleEntry.SourceList != null && !paSecurityRuleEntry.SourceList.Contains(PA_ANY_VALUE))
+                    if (paSecurityRuleEntry.SourceList != null && !paSecurityRuleEntry.SourceList.Contains(PA_ANY_VALUE))
                     {
                         cpRuleSourceList.ForEach(x => cpAccessRole.Networks.Add(x.Name));
                         cpRuleSourceList.Clear();
@@ -2504,8 +2512,8 @@ namespace PaloAltoMigration
                                                                              cpRuleNegateDestination,
                                                                              cpAddressesDict,
                                                                              cpNetGroupsDict,
-                                                                             cpServicesDict, 
-                                                                             cpServicesGroupsDict, 
+                                                                             cpServicesDict,
+                                                                             cpServicesGroupsDict,
                                                                              cpAccessRolesList,
                                                                              cpAppGroupsDict);
                         cpRule.Layer = cpPackage.ParentLayer.Name;
@@ -2610,7 +2618,7 @@ namespace PaloAltoMigration
                 }
             }
 
-            cpPackage.ParentLayer.Rules.ForEach(x => 
+            cpPackage.ParentLayer.Rules.ForEach(x =>
             {
                 if (cpGroupRuleAppFiltering.ContainsKey(x.Name) && cpGroupRuleAppFiltering[x.Name])
                     x.ConversionComments = "Applications and URL filtering is enabled for layer.";
@@ -2631,7 +2639,7 @@ namespace PaloAltoMigration
             AddCheckPointObject(cpPackage);
         }
 
-        private CheckPoint_RuleWithApplication CreateCpRule(PA_SecurityRuleEntry paSecurityRuleEntry, 
+        private CheckPoint_RuleWithApplication CreateCpRule(PA_SecurityRuleEntry paSecurityRuleEntry,
                                                             List<CheckPointObject> cpRuleSourceList,
                                                             List<CheckPointObject> cpRuleDestinationList,
                                                             List<CheckPointObject> cpRuleServiceList,
@@ -2644,8 +2652,8 @@ namespace PaloAltoMigration
                                                             bool cpRuleNegateDestination,
                                                             Dictionary<string, CheckPointObject> cpAddressesDict,
                                                             Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsDict,
-                                                            Dictionary<string, CheckPointObject> cpServicesDict, 
-                                                            Dictionary<string, CheckPoint_ServiceGroup> cpSrvGroupsDict, 
+                                                            Dictionary<string, CheckPointObject> cpServicesDict,
+                                                            Dictionary<string, CheckPoint_ServiceGroup> cpSrvGroupsDict,
                                                             List<CheckPoint_AccessRole> cpAccessRolesList,
                                                             Dictionary<string, CheckPoint_ApplicationGroup> cpAppGroupsDict)
         {
@@ -2689,7 +2697,7 @@ namespace PaloAltoMigration
             });
             cpRule.Service.ForEach(x =>
             {
-                if(x.GetType() == typeof(CheckPoint_ServiceGroup))
+                if (x.GetType() == typeof(CheckPoint_ServiceGroup))
                 {
                     AddCpServiceGroup((CheckPoint_ServiceGroup)x, cpServicesDict, cpSrvGroupsDict);
                 }
@@ -2708,7 +2716,7 @@ namespace PaloAltoMigration
             }
             cpRule.Application.ForEach(x =>
             {
-                if(x.GetType() == typeof(CheckPoint_ApplicationGroup))
+                if (x.GetType() == typeof(CheckPoint_ApplicationGroup))
                 {
                     AddCpApplicationGroup((CheckPoint_ApplicationGroup)x, cpAppGroupsDict);
                 }
@@ -2726,9 +2734,9 @@ namespace PaloAltoMigration
         #region Convert Nat Policy
 
         public void ConvertNatPolicy(PA_VsysEntry paVsysEntry,
-                                     Dictionary<string, CheckPointObject> cpAddressesDict, 
+                                     Dictionary<string, CheckPointObject> cpAddressesDict,
                                      Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsDict,
-                                     Dictionary<string, CheckPointObject> cpServicesDict, 
+                                     Dictionary<string, CheckPointObject> cpServicesDict,
                                      Dictionary<string, string> paServicesTypesDict,
                                      Dictionary<string, CheckPoint_ServiceGroup> cpServicesGroupsDict)
         {
@@ -2736,7 +2744,7 @@ namespace PaloAltoMigration
 
             if (paVsysEntry.Rulebase != null && paVsysEntry.Rulebase.Nat != null && paVsysEntry.Rulebase.Nat.RulesList != null)
             {
-                foreach(PA_NatRuleEntry paNatRuleEntry in paVsysEntry.Rulebase.Nat.RulesList)
+                foreach (PA_NatRuleEntry paNatRuleEntry in paVsysEntry.Rulebase.Nat.RulesList)
                 {
                     List<CheckPointObject> cpSourceTranslationList = new List<CheckPointObject>();
                     bool isSourceTranslationExists = true;
@@ -2744,18 +2752,24 @@ namespace PaloAltoMigration
                     bool isNatRuleBiDirectional = false;
                     bool isDestinationTranslationNone = false;
 
+                    if ("nptv6".Equals(paNatRuleEntry.NatType?.ToLower()))
+                    {
+                        _warningsList.Add(String.Format("Unsupported nat-type '{1}' for NAT rule '{0}'.", paNatRuleEntry.Name, paNatRuleEntry.NatType));
+                        continue;
+                    }
+
                     #region converting source translation to list; checking if NAT Rule Method should be Static
                     if (paNatRuleEntry.SourceTranslation != null)
                     {
-                        if(paNatRuleEntry.SourceTranslation.StaticIp != null)
+                        if (paNatRuleEntry.SourceTranslation.StaticIp != null)
                         {
-                            if(!string.IsNullOrWhiteSpace(paNatRuleEntry.SourceTranslation.StaticIp.TranslatedAddress))
+                            if (!string.IsNullOrWhiteSpace(paNatRuleEntry.SourceTranslation.StaticIp.TranslatedAddress))
                             {
-                                if(cpAddressesDict.ContainsKey(paNatRuleEntry.SourceTranslation.StaticIp.TranslatedAddress))
+                                if (cpAddressesDict.ContainsKey(paNatRuleEntry.SourceTranslation.StaticIp.TranslatedAddress))
                                 {
                                     cpSourceTranslationList.Add(cpAddressesDict[paNatRuleEntry.SourceTranslation.StaticIp.TranslatedAddress]);
                                     isNatRuleStatic = true;
-                                    if(!string.IsNullOrWhiteSpace(paNatRuleEntry.SourceTranslation.StaticIp.IsBiDirectional) 
+                                    if (!string.IsNullOrWhiteSpace(paNatRuleEntry.SourceTranslation.StaticIp.IsBiDirectional)
                                         && paNatRuleEntry.SourceTranslation.StaticIp.IsBiDirectional.ToLower().Equals("yes"))
                                     {
                                         isNatRuleBiDirectional = true;
@@ -2763,26 +2777,26 @@ namespace PaloAltoMigration
                                 }
                             }
                         }
-                        else if(paNatRuleEntry.SourceTranslation.DynamicIp != null)
+                        else if (paNatRuleEntry.SourceTranslation.DynamicIp != null)
                         {
-                            if(paNatRuleEntry.SourceTranslation.DynamicIp.TranslatedAddresses != null)
+                            if (paNatRuleEntry.SourceTranslation.DynamicIp.TranslatedAddresses != null)
                             {
-                                foreach(string translatedAddress in paNatRuleEntry.SourceTranslation.DynamicIp.TranslatedAddresses)
+                                foreach (string translatedAddress in paNatRuleEntry.SourceTranslation.DynamicIp.TranslatedAddresses)
                                 {
                                     if (cpAddressesDict.ContainsKey(translatedAddress))
                                     {
                                         cpSourceTranslationList.Add(cpAddressesDict[translatedAddress]);
                                     }
-                                    else if(cpNetGroupsDict.ContainsKey(translatedAddress))
+                                    else if (cpNetGroupsDict.ContainsKey(translatedAddress))
                                     {
                                         cpSourceTranslationList.Add(cpNetGroupsDict[translatedAddress]);
                                     }
                                 }
                             }
                         }
-                        else if(paNatRuleEntry.SourceTranslation.DynamicIpAndPort != null)
+                        else if (paNatRuleEntry.SourceTranslation.DynamicIpAndPort != null)
                         {
-                            if(paNatRuleEntry.SourceTranslation.DynamicIpAndPort.TranslatedAddresses != null &&
+                            if (paNatRuleEntry.SourceTranslation.DynamicIpAndPort.TranslatedAddresses != null &&
                                 paNatRuleEntry.SourceTranslation.DynamicIpAndPort.TranslatedAddresses.Count > 0)
                             {
                                 foreach (string translatedAddress in paNatRuleEntry.SourceTranslation.DynamicIpAndPort.TranslatedAddresses)
@@ -2797,12 +2811,12 @@ namespace PaloAltoMigration
                                     }
                                 }
                             }
-                            else if(paNatRuleEntry.SourceTranslation.DynamicIpAndPort.InterfaceAddress != null)
+                            else if (paNatRuleEntry.SourceTranslation.DynamicIpAndPort.InterfaceAddress != null)
                             {
                                 string intfAddrIP = paNatRuleEntry.SourceTranslation.DynamicIpAndPort.InterfaceAddress.Ip;
-                                if(!string.IsNullOrWhiteSpace(intfAddrIP))
+                                if (!string.IsNullOrWhiteSpace(intfAddrIP))
                                 {
-                                    if(cpAddressesDict.ContainsKey(intfAddrIP))
+                                    if (cpAddressesDict.ContainsKey(intfAddrIP))
                                     {
                                         cpSourceTranslationList.Add(cpAddressesDict[intfAddrIP]);
                                     }
@@ -2829,7 +2843,7 @@ namespace PaloAltoMigration
                         }
                     }
 
-                    if(cpSourceTranslationList.Count == 0)
+                    if (cpSourceTranslationList.Count == 0)
                     {
                         isSourceTranslationExists = false;
                         // createing Dummy Object because we need to have at least 1 element in cpSourceTranslationList for creating NAT rule
@@ -2837,7 +2851,7 @@ namespace PaloAltoMigration
                     }
                     #endregion
 
-                    if(paNatRuleEntry.DestinationTranslation == null)
+                    if (paNatRuleEntry.DestinationTranslation == null)
                     {
                         isDestinationTranslationNone = true;
                     }
@@ -3002,12 +3016,17 @@ namespace PaloAltoMigration
                                 if (isSourceTranslationExists)
                                 {
                                     cpNatRule.TranslatedSource = cpSourceTranslation;
-                                    if(isNatRuleStatic)
+
+                                    if (isNatRuleStatic)
                                     {
                                         cpNatRule.Method = CheckPoint_NAT_Rule.NatMethod.Static;
                                     }
+
                                 }
                                 #endregion
+
+                                PostProcessNatRule46(cpNatRule);
+                                PostProcessNatRule64(cpNatRule);
 
                                 #region adding destination translation
 
@@ -3172,22 +3191,22 @@ namespace PaloAltoMigration
                                         cpNatRule.TranslatedDestination = cpNetGroupsDict[paNatRuleEntry.DynamicDestinationTranslation.TranslatedAddress];
                                     }
 
-                                    if(!string.IsNullOrWhiteSpace(paNatRuleEntry.DynamicDestinationTranslation.TranslatedPort))
+                                    if (!string.IsNullOrWhiteSpace(paNatRuleEntry.DynamicDestinationTranslation.TranslatedPort))
                                     {
-                                        if(!string.IsNullOrWhiteSpace(paNatRuleEntry.Service))
+                                        if (!string.IsNullOrWhiteSpace(paNatRuleEntry.Service))
                                         {
                                             if (cpServicesDict.ContainsKey(paNatRuleEntry.Service))
                                             {
                                                 CheckPointObject cpService = cpServicesDict[paNatRuleEntry.Service];
-                                                if(cpService.GetType() == typeof(CheckPoint_TcpService))
+                                                if (cpService.GetType() == typeof(CheckPoint_TcpService))
                                                 {
                                                     cpNatRule.TranslatedService = CreateNatServiceTcpFromDynDest(paNatRuleEntry);
                                                 }
-                                                else if(cpService.GetType() == typeof(CheckPoint_UdpService))
+                                                else if (cpService.GetType() == typeof(CheckPoint_UdpService))
                                                 {
                                                     cpNatRule.TranslatedService = CreateNatServiceUdpFromDynDest(paNatRuleEntry);
                                                 }
-                                                else if(cpService.GetType() == typeof(CheckPoint_PredifinedObject) && paServicesTypesDict.ContainsKey(paNatRuleEntry.Service))
+                                                else if (cpService.GetType() == typeof(CheckPoint_PredifinedObject) && paServicesTypesDict.ContainsKey(paNatRuleEntry.Service))
                                                 {
                                                     string servicesType = paServicesTypesDict[paNatRuleEntry.Service];
                                                     if (servicesType.Trim().ToUpper().Equals("TCP"))
@@ -3268,12 +3287,12 @@ namespace PaloAltoMigration
 
                                 if (messagesE.Count == 0)
                                 {
-                                    if(!(cpNatRule.Source is CheckPoint_Domain) &&
+                                    if (!(cpNatRule.Source is CheckPoint_Domain) &&
                                         !(cpNatRule.Destination is CheckPoint_Domain) &&
                                         !(cpNatRule.TranslatedSource is CheckPoint_Domain) &&
                                         !(cpNatRule.TranslatedDestination is CheckPoint_Domain))
                                     {
-                                        if(isNatRuleBiDirectional && isDestinationTranslationNone)
+                                        if (isNatRuleBiDirectional && isDestinationTranslationNone)
                                         {
                                             //TRANS DEST == NONE
                                             // orig source <- orig destin
@@ -3342,6 +3361,136 @@ namespace PaloAltoMigration
             }
         }
 
+        private void PostProcessNatRule64(CheckPoint_NAT_Rule natRule)
+        {
+            var isDestinationHost = false;
+            var isDestinationNetwork = false;
+            var isDestinationIpv6 = false;
+            if (natRule?.Destination != null)
+            {
+                isDestinationHost = natRule.Destination is CheckPoint_Host;
+                isDestinationNetwork = natRule.Destination is CheckPoint_Network;
+                if (isDestinationHost)
+                {
+                    var host = (CheckPoint_Host)natRule.Destination;
+                    isDestinationIpv6 = NetworkUtils.IsValidIpv6(host.IpAddress);
+                }
+                if (isDestinationNetwork)
+                {
+                    var network = (CheckPoint_Network)natRule.Destination;
+                    isDestinationIpv6 = NetworkUtils.IsValidIpv6(network.Subnet);
+                }
+            }
+            if (!isDestinationIpv6)
+            {
+                // destination is not Ipv6, no sense to continue
+                return;
+            }
+
+            var isTranslatedSourceHost = false;
+            var isTranslatedSourceNetwork = false;
+            var isTranslatedSourceIpv4 = false;
+            if (natRule?.TranslatedSource != null)
+            {
+                isTranslatedSourceHost = natRule.TranslatedSource is CheckPoint_Host;
+                isTranslatedSourceNetwork = natRule.TranslatedSource is CheckPoint_Network;
+                if (isTranslatedSourceHost)
+                {
+                    var host = (CheckPoint_Host)natRule.TranslatedSource;
+                    isTranslatedSourceIpv4 = NetworkUtils.IsValidIpv4(host.IpAddress);
+                }
+                if (isTranslatedSourceNetwork)
+                {
+                    var network = (CheckPoint_Network)natRule.TranslatedSource;
+                    isTranslatedSourceIpv4 = NetworkUtils.IsValidIpv4(network.Subnet);
+                }
+            }
+            if (!isTranslatedSourceIpv4)
+            {
+                // translated source is not Ipv4, no sense to continue
+                return;
+            }
+
+            // change NAT rule method
+            natRule.Method = CheckPoint_NAT_Rule.NatMethod.Nat64;
+
+            //  a address-range should be used instead of network of host for translated source
+            IPRange ipRange;
+            if (isTranslatedSourceNetwork)
+            {
+                var network = (CheckPoint_Network)natRule.TranslatedSource;
+                ipRange = network.GetIPRanges().Ranges[0];
+            }
+            else // if translated source is a host
+            {
+                var host = (CheckPoint_Host)natRule.TranslatedSource;
+                ipRange = host.GetIPRanges().Ranges[0];
+            }
+            var checkpointRange = new CheckPoint_Range();
+            checkpointRange.RangeFrom = NetworkUtils.Number2Ip(ipRange.Minimum);
+            checkpointRange.RangeTo = NetworkUtils.Number2Ip(ipRange.Maximum);
+            checkpointRange.Name = "r_" + checkpointRange.RangeFrom + "-" + checkpointRange.RangeTo;
+            if (_cpObjects.GetObject(checkpointRange.Name) == null)
+            {
+                AddCheckPointObject(checkpointRange);
+            }
+            natRule.TranslatedSource = checkpointRange;
+        }
+
+        private void PostProcessNatRule46(CheckPoint_NAT_Rule natRule)
+        {
+            var isDestinationHost = false;
+            var isDestinationNetwork = false;
+            var isDestinationIpv4 = false;
+            if (natRule?.Destination != null)
+            {
+                isDestinationHost = natRule.Destination is CheckPoint_Host;
+                isDestinationNetwork = natRule.Destination is CheckPoint_Network;
+                if (isDestinationHost)
+                {
+                    var host = (CheckPoint_Host)natRule.Destination;
+                    isDestinationIpv4 = NetworkUtils.IsValidIpv4(host.IpAddress);
+                }
+                if (isDestinationNetwork)
+                {
+                    var network = (CheckPoint_Network)natRule.Destination;
+                    isDestinationIpv4 = NetworkUtils.IsValidIpv4(network.Subnet);
+                }
+            }
+            if (!isDestinationIpv4)
+            {
+                // destination is not Ipv4, no sense to continue
+                return;
+            }
+
+            var isTranslatedSourceHost = false;
+            var isTranslatedSourceNetwork = false;
+            var isTranslatedSourceIpv6 = false;
+            if (natRule?.TranslatedSource != null)
+            {
+                isTranslatedSourceHost = natRule.TranslatedSource is CheckPoint_Host;
+                isTranslatedSourceNetwork = natRule.TranslatedSource is CheckPoint_Network;
+                if (isTranslatedSourceHost)
+                {
+                    var host = (CheckPoint_Host)natRule.TranslatedSource;
+                    isTranslatedSourceIpv6 = NetworkUtils.IsValidIpv6(host.IpAddress);
+                }
+                if (isTranslatedSourceNetwork)
+                {
+                    var network = (CheckPoint_Network)natRule.TranslatedSource;
+                    isTranslatedSourceIpv6 = NetworkUtils.IsValidIpv6(network.Subnet);
+                }
+            }
+            if (!isTranslatedSourceIpv6)
+            {
+                // translated source is not Ipv6, no sense to continue
+                return;
+            }
+
+            // change NAT rule method
+            natRule.Method = CheckPoint_NAT_Rule.NatMethod.Nat46;
+        }
+
         public CheckPointObject CreateNatServiceTcpFromStatDest(PA_NatRuleEntry paNatRuleEntry)
         {
             CheckPoint_TcpService natServiceTcp = new CheckPoint_TcpService();
@@ -3379,9 +3528,9 @@ namespace PaloAltoMigration
         }
 
         public void GetServicesTypesFromServicesGroup(
-                                        CheckPoint_ServiceGroup cpSrvGroup, 
-                                        List<CheckPoint_ServiceGroup> cpServicesGroups, 
-                                        List<CheckPointObject> cpServices, 
+                                        CheckPoint_ServiceGroup cpSrvGroup,
+                                        List<CheckPoint_ServiceGroup> cpServicesGroups,
+                                        List<CheckPointObject> cpServices,
                                         out bool isTcpSrv, out bool isUdpSrv)
         {
             isTcpSrv = false;
@@ -3390,7 +3539,7 @@ namespace PaloAltoMigration
             foreach (string cpSrvMember in cpSrvGroup.Members)
             {
                 CheckPointObject cpSrv = cpServices.Find(x => x.Name.Equals(cpSrvMember));
-                if(cpSrv != null)
+                if (cpSrv != null)
                 {
                     if (cpSrv.GetType() == typeof(CheckPoint_TcpService))
                         isTcpSrv = true;
@@ -3401,7 +3550,7 @@ namespace PaloAltoMigration
                 }
 
                 CheckPoint_ServiceGroup cpSrvGrp = cpServicesGroups.Find(x => x.Name.Equals(cpSrvMember));
-                if(cpSrvGrp != null)
+                if (cpSrvGrp != null)
                 {
                     GetServicesTypesFromServicesGroup(cpSrvGrp, cpServicesGroups, cpServices, out isTcpSrv, out isUdpSrv);
                 }
@@ -3409,9 +3558,9 @@ namespace PaloAltoMigration
         }
 
         public void GetServicesGroupsFromServiceGroup(
-                                            CheckPoint_ServiceGroup cpSrvGroup, 
-                                            List<CheckPoint_ServiceGroup> cpServicesGroups, 
-                                            List<CheckPointObject> cpServices, 
+                                            CheckPoint_ServiceGroup cpSrvGroup,
+                                            List<CheckPoint_ServiceGroup> cpServicesGroups,
+                                            List<CheckPointObject> cpServices,
                                             List<CheckPointObject> cpSrvGrpMembersTcp,
                                             List<CheckPointObject> cpSrvGrpMembersUdp)
         {
@@ -3431,11 +3580,11 @@ namespace PaloAltoMigration
                     else if (cpSrv.GetType() == typeof(CheckPoint_PredifinedObject) && cpPredefServicesTypes.ContainsKey(cpSrv.Name))
                     {
                         string srvType = cpPredefServicesTypes[cpSrv.Name].ToLower();
-                        if(srvType.Equals(SERVICE_TYPE_TCP.ToLower()))
+                        if (srvType.Equals(SERVICE_TYPE_TCP.ToLower()))
                         {
                             cpSrvGrpMembersTcp.Add(cpSrv);
                         }
-                        else if(srvType.Equals(SERVICE_TYPE_UDP.ToLower()))
+                        else if (srvType.Equals(SERVICE_TYPE_UDP.ToLower()))
                         {
                             cpSrvGrpMembersUdp.Add(cpSrv);
                         }
@@ -3455,12 +3604,12 @@ namespace PaloAltoMigration
 
         #region Utility methods
 
-        public void AddCpApplicationGroup(CheckPoint_ApplicationGroup cpAppGrp, 
+        public void AddCpApplicationGroup(CheckPoint_ApplicationGroup cpAppGrp,
                                           Dictionary<string, CheckPoint_ApplicationGroup> cpAppGroupsDict)
         {
-            foreach(string member in cpAppGrp.Members)
+            foreach (string member in cpAppGrp.Members)
             {
-                if(cpAppGroupsDict.ContainsKey(member))
+                if (cpAppGroupsDict.ContainsKey(member))
                 {
                     AddCpApplicationGroup(cpAppGroupsDict[member], cpAppGroupsDict);
                 }
@@ -3468,17 +3617,17 @@ namespace PaloAltoMigration
             AddCheckPointObject(cpAppGrp);
         }
 
-        public void AddCpNetworkGroup(CheckPoint_NetworkGroup cpNetGroup, 
-                                      Dictionary<string, CheckPointObject> cpAddressesDict, 
+        public void AddCpNetworkGroup(CheckPoint_NetworkGroup cpNetGroup,
+                                      Dictionary<string, CheckPointObject> cpAddressesDict,
                                       Dictionary<string, CheckPoint_NetworkGroup> cpNetGroupsDict)
         {
-            foreach(string member in cpNetGroup.Members)
+            foreach (string member in cpNetGroup.Members)
             {
-                if(cpAddressesDict.ContainsKey(member))
+                if (cpAddressesDict.ContainsKey(member))
                 {
                     AddCheckPointObject(cpAddressesDict[member]);
                 }
-                else if(cpNetGroupsDict.ContainsKey(member))
+                else if (cpNetGroupsDict.ContainsKey(member))
                 {
                     AddCpNetworkGroup(cpNetGroupsDict[member], cpAddressesDict, cpNetGroupsDict);
                     AddCheckPointObject(cpNetGroupsDict[member]);
