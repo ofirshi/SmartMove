@@ -457,7 +457,7 @@ namespace MigrationBase
                     }
                     file.WriteLine(curRuleHtmlPart);
                     curRuleHtmlFull.Add(curRuleHtmlPart);
-					
+
                     var dummy = ConversionIncidentType.None;
                     curRuleHtmlPart = "      <td>" + RuleStringList2Html(rule.Target, false, CheckPointObject.All, ref dummy) + "</td>";
                     file.WriteLine(curRuleHtmlPart);
@@ -504,7 +504,7 @@ namespace MigrationBase
                     file.WriteLine("<div id=\"PolicyConversionErrors\" style='margin-left: 20px;'><h3>Conversion Errors</h3></div>");
                     file.WriteLine("<table style='background-color: rgb(255,255,150);'>");
                     file.WriteLine("   <tr>");
-                    file.WriteLine("      <th class='errors_header'>No.</th> <th class='errors_header'>Source</th> <th class='errors_header'>Destination</th> <th class='errors_header'>Service</th> <th class='errors_header'>Translated-Source</th> <th class='errors_header'>Translated-Destination</th> <th class='errors_header'>Translated-Service</th> <th>Install On</th> <th class='errors_header'>Comments</th>");                    
+                    file.WriteLine("      <th class='errors_header'>No.</th> <th class='errors_header'>Source</th> <th class='errors_header'>Destination</th> <th class='errors_header'>Service</th> <th class='errors_header'>Translated-Source</th> <th class='errors_header'>Translated-Destination</th> <th class='errors_header'>Translated-Service</th> <th>Install On</th> <th class='errors_header'>Comments</th>");
                     file.WriteLine("   </tr>");
 
                     foreach (var ruleHtml in rulesWithConversionErrors)
@@ -525,7 +525,7 @@ namespace MigrationBase
                     file.WriteLine("<div id=\"PolicyConversionInfos\" style='margin-left: 20px;'><h3>Conversion Notifications</h3></div>");
                     file.WriteLine("<table style='background-color: rgb(220,240,247);'>");
                     file.WriteLine("   <tr>");
-                    file.WriteLine("      <th class='errors_header'>No.</th> <th class='errors_header'>Source</th> <th class='errors_header'>Destination</th> <th class='errors_header'>Service</th> <th class='errors_header'>Translated-Source</th> <th class='errors_header'>Translated-Destination</th> <th class='errors_header'>Translated-Service</th> <th>Install On</th> <th class='errors_header'>Comments</th>");                    
+                    file.WriteLine("      <th class='errors_header'>No.</th> <th class='errors_header'>Source</th> <th class='errors_header'>Destination</th> <th class='errors_header'>Service</th> <th class='errors_header'>Translated-Source</th> <th class='errors_header'>Translated-Destination</th> <th class='errors_header'>Translated-Service</th> <th>Install On</th> <th class='errors_header'>Comments</th>");
                     file.WriteLine("   </tr>");
 
                     foreach (var ruleHtml in rulesWithConversionInfos)
@@ -1765,9 +1765,9 @@ namespace MigrationBase
                 }
                 else
                 {
-                    
-                     res += "<div><a href='./" + Path.GetFileName(ObjectsHtmlFile) + "#" + item + "' target='_blank'>" + item + "</a></div>";
-                    
+
+                    res += "<div><a href='./" + Path.GetFileName(ObjectsHtmlFile) + "#" + item + "' target='_blank'>" + item + "</a></div>";
+
                 }
             }
 
@@ -1890,5 +1890,137 @@ namespace MigrationBase
         }
 
         #endregion
+
+        protected void PostProcessNatRule64(CheckPoint_NAT_Rule natRule)
+        {
+            var isSourceHost = false;
+            var isSourceNetwork = false;
+            var isSourceIpv6 = false;
+            var source = natRule?.Source != null ? natRule?.Source : natRule?.Destination;
+            if (source != null)
+            {
+                isSourceHost = source is CheckPoint_Host;
+                isSourceNetwork = source is CheckPoint_Network;
+                if (isSourceHost)
+                {
+                    var host = (CheckPoint_Host)source;
+                    isSourceIpv6 = NetworkUtils.IsValidIpv6(host.IpAddress);
+                }
+                if (isSourceNetwork)
+                {
+                    var network = (CheckPoint_Network)source;
+                    isSourceIpv6 = NetworkUtils.IsValidIpv6(network.Subnet);
+                }
+            }
+            if (!isSourceIpv6)
+            {
+                // destination is not Ipv6, no sense to continue
+                return;
+            }
+
+            var isTranslatedSourceHost = false;
+            var isTranslatedSourceNetwork = false;
+            var isTranslatedSourceIpv4 = false;
+            if (natRule?.TranslatedSource != null)
+            {
+                isTranslatedSourceHost = natRule.TranslatedSource is CheckPoint_Host;
+                isTranslatedSourceNetwork = natRule.TranslatedSource is CheckPoint_Network;
+                if (isTranslatedSourceHost)
+                {
+                    var host = (CheckPoint_Host)natRule.TranslatedSource;
+                    isTranslatedSourceIpv4 = NetworkUtils.IsValidIpv4(host.IpAddress);
+                }
+                if (isTranslatedSourceNetwork)
+                {
+                    var network = (CheckPoint_Network)natRule.TranslatedSource;
+                    isTranslatedSourceIpv4 = NetworkUtils.IsValidIpv4(network.Subnet);
+                }
+            }
+            if (!isTranslatedSourceIpv4)
+            {
+                // translated source is not Ipv4, no sense to continue
+                return;
+            }
+
+            // change NAT rule method
+            natRule.Method = CheckPoint_NAT_Rule.NatMethod.Nat64;
+
+            //  a address-range should be used instead of network of host for translated source
+            IPRange ipRange;
+            if (isTranslatedSourceNetwork)
+            {
+                var network = (CheckPoint_Network)natRule.TranslatedSource;
+                ipRange = network.GetIPRanges().Ranges[0];
+            }
+            else // if translated source is a host
+            {
+                var host = (CheckPoint_Host)natRule.TranslatedSource;
+                ipRange = host.GetIPRanges().Ranges[0];
+            }
+            var checkpointRange = new CheckPoint_Range();
+            checkpointRange.RangeFrom = NetworkUtils.Number2Ip(ipRange.Minimum);
+            checkpointRange.RangeTo = NetworkUtils.Number2Ip(ipRange.Maximum);
+            checkpointRange.Name = "r_" + checkpointRange.RangeFrom + "-" + checkpointRange.RangeTo;
+            if (_cpObjects.GetObject(checkpointRange.Name) == null)
+            {
+                AddCheckPointObject(checkpointRange);
+            }
+            natRule.TranslatedSource = checkpointRange;
+        }
+
+        protected void PostProcessNatRule46(CheckPoint_NAT_Rule natRule)
+        {
+            var isSourceHost = false;
+            var isSourceNetwork = false;
+            var isSourceIpv4 = false;
+            var source = natRule?.Source != null ? natRule?.Source : natRule?.Destination;
+            if (source != null)
+            {
+                isSourceHost = source is CheckPoint_Host;
+                isSourceNetwork = source is CheckPoint_Network;
+                if (isSourceHost)
+                {
+                    var host = (CheckPoint_Host)source;
+                    isSourceIpv4 = NetworkUtils.IsValidIpv4(host.IpAddress);
+                }
+                if (isSourceNetwork)
+                {
+                    var network = (CheckPoint_Network)source;
+                    isSourceIpv4 = NetworkUtils.IsValidIpv4(network.Subnet);
+                }
+            }
+            if (!isSourceIpv4)
+            {
+                // destination is not Ipv4, no sense to continue
+                return;
+            }
+
+            var isTranslatedSourceHost = false;
+            var isTranslatedSourceNetwork = false;
+            var isTranslatedSourceIpv6 = false;
+            if (natRule?.TranslatedSource != null)
+            {
+                isTranslatedSourceHost = natRule.TranslatedSource is CheckPoint_Host;
+                isTranslatedSourceNetwork = natRule.TranslatedSource is CheckPoint_Network;
+                if (isTranslatedSourceHost)
+                {
+                    var host = (CheckPoint_Host)natRule.TranslatedSource;
+                    isTranslatedSourceIpv6 = NetworkUtils.IsValidIpv6(host.IpAddress);
+                }
+                if (isTranslatedSourceNetwork)
+                {
+                    var network = (CheckPoint_Network)natRule.TranslatedSource;
+                    isTranslatedSourceIpv6 = NetworkUtils.IsValidIpv6(network.Subnet);
+                }
+            }
+            if (!isTranslatedSourceIpv6)
+            {
+                // translated source is not Ipv6, no sense to continue
+                return;
+            }
+
+            // change NAT rule method
+            natRule.Method = CheckPoint_NAT_Rule.NatMethod.Nat46;
+        }
     }
 }
