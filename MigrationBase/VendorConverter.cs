@@ -976,17 +976,25 @@ namespace MigrationBase
                             continue;
                         }
 
-                        obj.MembersMaxPublishSize = groupsMaxBulkSize;
-                        for (int i = 0; i < obj.Members.Count; i += groupsMaxBulkSize)
+                        if (obj.Members.Count == 0)
                         {
-                            obj.MembersPublishIndex = i;
-
                             file.WriteLine(CLIScriptBuilder.GenerateObjectScript(obj));
+                        }
+                        else
+                        {
+                            obj.MembersMaxPublishSize = groupsMaxBulkSize;
 
-                            objectsCount++;
-                            if (objectsCount % publishLatency == 0)
+                            for (int i = 0; i < obj.Members.Count; i += groupsMaxBulkSize)
                             {
-                                file.WriteLine(CLIScriptBuilder.GeneratePublishScript());
+                                obj.MembersPublishIndex = i;
+
+                                file.WriteLine(CLIScriptBuilder.GenerateObjectScript(obj));
+
+                                objectsCount++;
+                                if (objectsCount % publishLatency == 0)
+                                {
+                                    file.WriteLine(CLIScriptBuilder.GeneratePublishScript());
+                                }
                             }
                         }
                     }

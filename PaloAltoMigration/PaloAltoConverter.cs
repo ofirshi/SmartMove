@@ -768,7 +768,7 @@ namespace PaloAltoMigration
             PA_Config paConfig = _paParser.Config;
             _isNatConverted = convertNat;
 
-            LDAP_Account_Unit = LDAPAccoutUnit.Trim();
+            LDAP_Account_Unit = LDAPAccoutUnit?.Trim();
 
             if (paConfig != null)
             {
