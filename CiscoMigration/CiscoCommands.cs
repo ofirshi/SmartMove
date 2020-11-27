@@ -755,7 +755,6 @@ namespace CiscoMigration
                         {
                             ConversionIncidentType = ConversionIncidentType.ManualActionRequired;
                             ConversionIncidentMessage = "Invalid IP address (" + IpAddress + "). Using IP 1.1.1.1.";
-                            Console.WriteLine(ConversionIncidentMessage);
 
                             IpAddress = "1.1.1.1";
                         }
@@ -1510,7 +1509,6 @@ namespace CiscoMigration
             {
                 ConversionIncidentType = ConversionIncidentType.ManualActionRequired;
                 ConversionIncidentMessage = "Invalid IP address (" + DestinationIp + "). Using IP 1.1.1.1.";
-                Console.WriteLine(ConversionIncidentMessage);
 
                 DestinationIp = "1.1.1.1";
                 DestinationNetmask = "255.255.255.255";
@@ -1835,7 +1833,6 @@ namespace CiscoMigration
             {
                 ConversionIncidentType = ConversionIncidentType.Informative;
                 ConversionIncidentMessage = "Outbound ACLs will not be converted";
-                Console.WriteLine(ConversionIncidentMessage);
             }
         }
     }

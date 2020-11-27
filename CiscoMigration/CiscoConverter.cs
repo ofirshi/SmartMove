@@ -92,7 +92,6 @@ namespace CiscoMigration
                         return "network_" + IpAddress + "_" + MaskPrefix;
                 }
 
-                Console.WriteLine("Error: unrecognized network object - Ip={0}, Mask={1}", IpAddress, NetMask);
                 return "_Err_in_network-line_" + CiscoCommandId;
             }
 
@@ -106,7 +105,6 @@ namespace CiscoMigration
                         return "network_" + IpAddress + "_" + MaskPrefix;
                 }
 
-                Console.WriteLine("Error: unrecognized network object - Ip={0}, Mask={1}, Prefix={2}", IpAddress, NetMask, MaskPrefix);
                 return "_Err_in_network-line_" + CiscoCommandId;
             }
 
