@@ -56,7 +56,7 @@ namespace SmartMove
         #region Private Members
 
         private readonly SupportedVendors _supportedVendors = new SupportedVendors();
-        
+
         #endregion
 
         #region Construction
@@ -82,7 +82,7 @@ namespace SmartMove
             get { return _supportedVendors.SelectedVendor; }
             set { _supportedVendors.SelectedVendor = value; }
         }
-        
+
         #endregion
 
         #region ConfigurationFileLabel
@@ -173,7 +173,7 @@ namespace SmartMove
 
         public static readonly DependencyProperty ConvertedPolicyRulesCountProperty =
             DependencyProperty.Register("ConvertedPolicyRulesCount", typeof(string), typeof(MainWindow), new PropertyMetadata(null));
-        
+
         #endregion
 
         #region ConvertedOptimizedPolicyRulesCount
@@ -186,7 +186,7 @@ namespace SmartMove
 
         public static readonly DependencyProperty ConvertedOptimizedPolicyRulesCountProperty =
             DependencyProperty.Register("ConvertedOptimizedPolicyRulesCount", typeof(string), typeof(MainWindow), new PropertyMetadata(null));
-        
+
         #endregion
 
         #region ConvertedNATPolicyRulesCount
@@ -233,7 +233,7 @@ namespace SmartMove
         public static string SKText { get; private set; }
         public static string SKLinkText { get; private set; }
         public static object SKLinkAddress { get; private set; }
-        
+
         #endregion
 
         #endregion
@@ -467,7 +467,7 @@ namespace SmartMove
                 default:
                     throw new InvalidDataException("Unexpected!!!");
             }
-			
+
             string vendorFileName = Path.GetFileNameWithoutExtension(ConfigFilePath.Text);
             string toolVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             string targetFolder = TargetFolderPath.Text + "\\";
@@ -477,11 +477,11 @@ namespace SmartMove
             try
             {
                 string ciscoFile = ConfigFilePath.Text;
-				switch (_supportedVendors.SelectedVendor)
+                switch (_supportedVendors.SelectedVendor)
                 {
                     case Vendor.PaloAltoPanorama:
-                        PanoramaParser panParser = (PanoramaParser)vendorParser;                        
-                        await Task.Run(() => panParser.ParseWithTargetFolder(ciscoFile,targetFolder));
+                        PanoramaParser panParser = (PanoramaParser)vendorParser;
+                        await Task.Run(() => panParser.ParseWithTargetFolder(ciscoFile, targetFolder));
                         break;
                     default:
                         await Task.Run(() => vendorParser.Parse(ciscoFile));
@@ -530,7 +530,7 @@ namespace SmartMove
                     {
                         ShowMessage("Unspecified FortiGate version.\nCannot find FortiGate version for the selected configuration.\nThe configuration may not parse correctly.", MessageTypes.Warning);
                     }
-                    else if(vendorParser.MajorVersion < 5)
+                    else if (vendorParser.MajorVersion < 5)
                     {
                         ShowMessage("Unsupported FortiGate version (" + vendorParser.Version + ").\nThis tool supports FortiGate 5.x and above configuration files.\nThe configuration may not parse correctly.", MessageTypes.Warning);
                     }
@@ -558,8 +558,6 @@ namespace SmartMove
                     }
                     break;
             }
-
-            vendorParser.Export(targetFolder + vendorFileName + ".json");
 
             VendorConverter vendorConverter;
 
@@ -589,7 +587,7 @@ namespace SmartMove
                     vendorConverter = paConverter;
                     break;
                 case Vendor.PaloAltoPanorama:
-                    PanoramaConverter panoramaConverter = new PanoramaConverter();                    
+                    PanoramaConverter panoramaConverter = new PanoramaConverter();
                     panoramaConverter.OptimizeConf = SkipUnusedObjectsConversion;
                     panoramaConverter.ConvertUserConf = ConvertUserConfiguration;
                     panoramaConverter.LDAPAccoutUnit = ldapAccountUnit.Trim();
@@ -615,16 +613,18 @@ namespace SmartMove
                 return;
             }
 
+            vendorParser.Export(targetFolder + vendorFileName + ".json");
+
             UpdateProgress(90, "Exporting Check Point configuration ...");
             vendorConverter.ExportConfigurationAsHtml();
             vendorConverter.ExportPolicyPackagesAsHtml();
             if (ConvertNATConfiguration)
             {
-		ConvertedNatPolicyLink.MouseUp -= Link_OnClick;
+                ConvertedNatPolicyLink.MouseUp -= Link_OnClick;
                 vendorConverter.ExportNatLayerAsHtml();
 
                 //check if the user asked for NAT policy and no rules found.
-                if (vendorConverter.RulesInNatLayer() == 0 ) // anly if 0 then we do not show NAT report.
+                if (vendorConverter.RulesInNatLayer() == 0) // anly if 0 then we do not show NAT report.
                 {
                     ConvertedNatPolicyLink.Style = (Style)ConvertedNatPolicyLink.FindResource("NormalTextBloclStyle");
                 }
@@ -858,7 +858,8 @@ namespace SmartMove
         {
             var messageWindow = new MessageWindow
             {
-                Message = message, MessageType = messageType
+                Message = message,
+                MessageType = messageType
             };
 
             messageWindow.ShowDialog();
