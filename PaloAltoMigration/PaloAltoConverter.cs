@@ -3093,7 +3093,7 @@ namespace PaloAltoMigration
                                                 if (cpServicesDict.ContainsKey(paNatRuleEntry.Service))
                                                 {
                                                     CheckPointObject cpService = cpServicesDict[paNatRuleEntry.Service];
-                                                    if (cpService.GetType() == typeof(CheckPoint_TcpService))
+                                                    if (cpService.GetType() == typeof(CheckPoint_TcpService) || cpService.GetType() == typeof(CheckPoint_ServiceGroup))
                                                     {
                                                         cpNatRule.TranslatedService = CreateNatServiceTcpFromStatDest(paNatRuleEntry);
                                                     }
@@ -3326,6 +3326,16 @@ namespace PaloAltoMigration
                                             _cpNatRules.Add(cpNatRuleBi);
                                         }
 
+                                        if (isNatRule46AndHasNonOriginTranslatedService(cpNatRule))
+                                        {
+                                            _warningsList.Add(String.Format("NAT Rule {0} has nat46 method and non-origin translated-service.", cpNatRule.Name));
+                                            continue; // skip this Nat rule
+                                        }
+                                        if (isNatRule46AndTranslatedSourceIsHost(cpNatRule))
+                                        {
+                                            _warningsList.Add(string.Format("NAT Rule {0} has nat46 method and host as translated-source.", cpNatRule.Name));
+                                            continue;
+                                        }
                                         _cpNatRules.Add(cpNatRule);
                                         AddCheckPointObject(cpNatRule.Source);
                                         AddCheckPointObject(cpNatRule.Destination);
