@@ -3336,6 +3336,11 @@ namespace PaloAltoMigration
                                             _warningsList.Add(string.Format("NAT Rule {0} has nat46 method and host as translated-source.", cpNatRule.Name));
                                             continue;
                                         }
+                                        if (isNatRule46AndOriginalDestinationIsNotHost(cpNatRule))
+                                        {
+                                            _warningsList.Add(string.Format("NAT Rule {0} has nat46 method and original-destination is not a host.", cpNatRule.Name));
+                                            continue;
+                                        }
                                         _cpNatRules.Add(cpNatRule);
                                         AddCheckPointObject(cpNatRule.Source);
                                         AddCheckPointObject(cpNatRule.Destination);

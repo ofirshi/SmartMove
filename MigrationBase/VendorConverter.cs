@@ -2058,6 +2058,13 @@ namespace MigrationBase
                     && (isCheckPointObjectIpv6(natRule.TranslatedSource))
                     && (natRule.TranslatedSource is CheckPoint_Host);
         }
+        protected bool isNatRule46AndOriginalDestinationIsNotHost(CheckPoint_NAT_Rule natRule)
+        {
+            return natRule != null
+                    && (isCheckPointObjectIpv4(natRule.Source) || isCheckPointObjectIpv4(natRule.Destination))
+                    && (isCheckPointObjectIpv6(natRule.TranslatedSource))
+                    && !(natRule.Destination is CheckPoint_Host);
+        }
 
         private bool isCheckPointObjectIpv6(CheckPointObject cpObj)
         {
