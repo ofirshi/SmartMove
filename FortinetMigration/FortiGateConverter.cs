@@ -990,7 +990,10 @@ namespace FortiGateMigration
                     List<CheckPointObject> cpObjectsList = _localMapperFgCp[key];
                     foreach (CheckPointObject cpObject in cpObjectsList)
                     {
-                        AddCheckPointObject(cpObject);
+                        if (!_cpObjects.IsKnownProtocol(cpObject.Name))
+                        {
+                            AddCheckPointObject(cpObject);
+                        }
                     }
                 }
             }
