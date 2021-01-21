@@ -980,8 +980,8 @@ namespace FortiGateMigration
             }
 
 
-            HashSet<CheckPointObject> cpUsedDomainsList = new HashSet<CheckPointObject>(); //set of used domains
-            HashSet<string> cpUsedDomainsNamesList = new HashSet<string>(); //set of names of used domains
+            HashSet<CheckPointObject> cpUsedfirewallObjectsList = new HashSet<CheckPointObject>(); //set of used firewall objects
+            HashSet<string> cpUsedFirewallObjectNamesList = new HashSet<string>(); //set of names of used firewall objects
             HashSet<string> usedObjInFirewall = CreateUsedInPoliciesObjects(fgCommandsList);
             foreach (string key in _localMapperFgCp.Keys)
             {
@@ -1004,9 +1004,9 @@ namespace FortiGateMigration
                                 if (cpObject.GetType() == typeof(CheckPoint_NetworkGroup))
                                 {
                                     CheckPoint_NetworkGroup networkGroup = (CheckPoint_NetworkGroup)cpObject;
-                                    foreach (string domain in networkGroup.Members)
+                                    foreach (string firewallObject in networkGroup.Members)
                                     {
-                                        cpUsedDomainsNamesList.Add(domain);
+                                        cpUsedFirewallObjectNamesList.Add(firewallObject);
                                     }
                                 }
                             }
@@ -1027,13 +1027,12 @@ namespace FortiGateMigration
                     List<CheckPointObject> cpObjectsList = _localMapperFgCp[key];
                     foreach (CheckPointObject cpObject in cpObjectsList)
                     {
-                        if (cpObject.TypeName.Contains("_Domain"))
-                            foreach (string domainName in cpUsedDomainsNamesList)
-                            {
-                                string domainCorrectName = domainName.StartsWith(".") ? domainName.Substring(1) : domainName;
-                                if (key.Contains(domainCorrectName))
-                                    AddCheckPointObject(cpObject);
-                            }
+                        foreach (string firewallObjectName in cpUsedFirewallObjectNamesList)
+                        {
+                            string firewallObjectCorrectName = firewallObjectName.StartsWith(".") ? firewallObjectName.Substring(1) : firewallObjectName;
+                            if (key.Contains(firewallObjectCorrectName))
+                                AddCheckPointObject(cpObject);
+                        }
                     }
                 }
             }
