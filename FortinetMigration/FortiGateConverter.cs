@@ -4740,7 +4740,7 @@ namespace FortiGateMigration
         public HashSet<string> CreateUsedInPoliciesObjects(List<FgCommand> fgCommandsList)
         {
             FgCommand_Config firewall_policy_search = null;
-            HashSet<string> UsedObjInFirewall = new HashSet<string>();      //used objects in polycies
+            HashSet<string> UsedObjInFirewall = new HashSet<string>();      //used objects in policies
             foreach (FgCommand fgCommand in fgCommandsList)
             {
                 if (fgCommand.GetType() == typeof(FgCommand_Config))
