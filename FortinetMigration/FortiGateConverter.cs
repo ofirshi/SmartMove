@@ -980,7 +980,6 @@ namespace FortiGateMigration
             }
 
 
-            HashSet<CheckPointObject> cpUsedfirewallObjectsList = new HashSet<CheckPointObject>(); //set of used firewall objects
             HashSet<string> cpUsedFirewallObjectNamesList = new HashSet<string>(); //set of names of used firewall objects
             HashSet<string> usedObjInFirewall = CreateUsedInPoliciesObjects(fgCommandsList);
             foreach (string key in _localMapperFgCp.Keys)
@@ -1030,7 +1029,7 @@ namespace FortiGateMigration
                         foreach (string firewallObjectName in cpUsedFirewallObjectNamesList)
                         {
                             string firewallObjectCorrectName = firewallObjectName.StartsWith(".") ? firewallObjectName.Substring(1) : firewallObjectName;
-                            if (key.Contains(firewallObjectCorrectName))
+                            if (key.Replace(" ", "_").Contains(firewallObjectCorrectName.Replace(" ","_")))
                                 AddCheckPointObject(cpObject);
                         }
                     }
@@ -4733,6 +4732,11 @@ namespace FortiGateMigration
             return Vendor.FortiGate.ToString();
         }
 
+        /// <summary>
+        /// Generate a list of firewall objects names whitch was used in politycs
+        /// </summary>
+        /// <param name="fgCommandsList">parsed config file</param>
+        /// <returns>set of names</returns>
         public HashSet<string> CreateUsedInPoliciesObjects(List<FgCommand> fgCommandsList)
         {
             FgCommand_Config firewall_policy_search = null;
@@ -4743,14 +4747,11 @@ namespace FortiGateMigration
                 {
                     FgCommand_Config fgCommandConfig = (FgCommand_Config)fgCommand;
 
-                    //check no-NAT rules
                     if (fgCommandConfig.ObjectName.Equals("firewall policy"))
                     {
                         firewall_policy_search = fgCommandConfig;
                         break;
                     }
-
-                    //check NAT rules
 
                 }
             }
