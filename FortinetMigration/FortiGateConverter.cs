@@ -872,7 +872,7 @@ namespace FortiGateMigration
             ChangeTargetFolder(targetFolderNew, targetFileNameNew);
 
             //Validate parsing
-            HashSet<string> validateErrors = ValidateConversion(fgCommandsList);
+            _errorsList.AddRange(ValidateConversion(fgCommandsList));
 
 
             if (!OptimizeConf)
@@ -4818,13 +4818,23 @@ namespace FortiGateMigration
                                     string[] ports = parsedElementServiceSet.Value.Split(' ');
                                     foreach (string port in ports)
                                     {
-                                        if (portsTcp.ContainsKey(port))
+                                        bool isFound;
+                                        string cpServiceName = _cpObjects.GetKnownServiceName("TCP_" + port, out isFound);
+
+                                        if (isFound)
                                         {
-                                            output.Add($"Conversion validation error: a TCP port {port} already used by service {portsTcp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            portsTcp.Add(port, parsedElementService.Table);
                                         }
                                         else
                                         {
-                                            portsTcp.Add(port, parsedElementService.Table);
+                                            if (portsTcp.ContainsKey(port))
+                                            {
+                                                output.Add($"Conversion validation error: a TCP port {port} already used by service {portsTcp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            }
+                                            else
+                                            {
+                                                portsTcp.Add(port, parsedElementService.Table);
+                                            }
                                         }
                                     }
 
@@ -4835,13 +4845,23 @@ namespace FortiGateMigration
                                     string[] ports = parsedElementServiceSet.Value.Split(' ');
                                     foreach (string port in ports)
                                     {
-                                        if (portsUdp.ContainsKey(port))
+                                        bool isFound;
+                                        string cpServiceName = _cpObjects.GetKnownServiceName("UDP_" + port, out isFound);
+
+                                        if (isFound)
                                         {
-                                            output.Add($"Conversion validation error: a UDP port {port} already used by service {portsUdp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            portsUdp.Add(port, parsedElementService.Table);
                                         }
                                         else
                                         {
-                                            portsUdp.Add(port, parsedElementService.Table);
+                                            if (portsUdp.ContainsKey(port))
+                                            {
+                                                output.Add($"Conversion validation error: a UDP port {port} already used by service {portsUdp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            }
+                                            else
+                                            {
+                                                portsUdp.Add(port, parsedElementService.Table);
+                                            }
                                         }
                                     }
                                 }
