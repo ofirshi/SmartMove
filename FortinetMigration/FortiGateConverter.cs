@@ -1436,7 +1436,7 @@ namespace FortiGateMigration
             else
             {
                 CheckPoint_TcpService cpTcpService = new CheckPoint_TcpService();
-                cpTcpService.Name = GetSafeName(nameEdit);
+                cpTcpService.Name = GetSafeName(nameEdit) + "-" + dest.ToString() + "-tcp";
                 cpTcpService.Port = dest;
                 if (!src.Equals(""))
                 {
@@ -1486,7 +1486,7 @@ namespace FortiGateMigration
             else
             {
                 CheckPoint_UdpService cpUdpService = new CheckPoint_UdpService();
-                cpUdpService.Name = GetSafeName(nameEdit);
+                cpUdpService.Name = GetSafeName(nameEdit) + "-" + dest.ToString() + "-udp";
                 cpUdpService.Port = dest;
                 if (!src.Equals(""))
                 {
