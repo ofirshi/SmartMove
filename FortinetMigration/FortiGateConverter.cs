@@ -4823,7 +4823,7 @@ namespace FortiGateMigration
 
                                         if (isFound)
                                         {
-                                            portsTcp.Add(port, parsedElementService.Table);
+                                            continue;
                                         }
                                         else
                                         {
@@ -4850,7 +4850,7 @@ namespace FortiGateMigration
 
                                         if (isFound)
                                         {
-                                            portsUdp.Add(port, parsedElementService.Table);
+                                            continue;
                                         }
                                         else
                                         {
