@@ -872,7 +872,7 @@ namespace FortiGateMigration
             ChangeTargetFolder(targetFolderNew, targetFileNameNew);
 
             //Validate parsing
-            HashSet<string> validateErrors = ValidateConversion(fgCommandsList);
+            _errorsList.AddRange(ValidateConversion(fgCommandsList));
 
 
             if (!OptimizeConf)
@@ -1436,7 +1436,7 @@ namespace FortiGateMigration
             else
             {
                 CheckPoint_TcpService cpTcpService = new CheckPoint_TcpService();
-                cpTcpService.Name = GetSafeName(nameEdit);
+                cpTcpService.Name = GetSafeName(nameEdit) + "-" + dest.ToString() + "-tcp";
                 cpTcpService.Port = dest;
                 if (!src.Equals(""))
                 {
@@ -1486,7 +1486,7 @@ namespace FortiGateMigration
             else
             {
                 CheckPoint_UdpService cpUdpService = new CheckPoint_UdpService();
-                cpUdpService.Name = GetSafeName(nameEdit);
+                cpUdpService.Name = GetSafeName(nameEdit) + "-" + dest.ToString() + "-udp";
                 cpUdpService.Port = dest;
                 if (!src.Equals(""))
                 {
@@ -4818,13 +4818,23 @@ namespace FortiGateMigration
                                     string[] ports = parsedElementServiceSet.Value.Split(' ');
                                     foreach (string port in ports)
                                     {
-                                        if (portsTcp.ContainsKey(port))
+                                        bool isFound;
+                                        string cpServiceName = _cpObjects.GetKnownServiceName("TCP_" + port, out isFound);
+
+                                        if (isFound)
                                         {
-                                            output.Add($"Conversion validation error: a TCP port {port} already used by service {portsTcp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            continue;
                                         }
                                         else
                                         {
-                                            portsTcp.Add(port, parsedElementService.Table);
+                                            if (portsTcp.ContainsKey(port))
+                                            {
+                                                output.Add($"Conversion validation error: a TCP port {port} already used by service {portsTcp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            }
+                                            else
+                                            {
+                                                portsTcp.Add(port, parsedElementService.Table);
+                                            }
                                         }
                                     }
 
@@ -4835,13 +4845,23 @@ namespace FortiGateMigration
                                     string[] ports = parsedElementServiceSet.Value.Split(' ');
                                     foreach (string port in ports)
                                     {
-                                        if (portsUdp.ContainsKey(port))
+                                        bool isFound;
+                                        string cpServiceName = _cpObjects.GetKnownServiceName("UDP_" + port, out isFound);
+
+                                        if (isFound)
                                         {
-                                            output.Add($"Conversion validation error: a UDP port {port} already used by service {portsUdp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            continue;
                                         }
                                         else
                                         {
-                                            portsUdp.Add(port, parsedElementService.Table);
+                                            if (portsUdp.ContainsKey(port))
+                                            {
+                                                output.Add($"Conversion validation error: a UDP port {port} already used by service {portsUdp[port]}, but service {parsedElementService.Table} trying to use it");
+                                            }
+                                            else
+                                            {
+                                                portsUdp.Add(port, parsedElementService.Table);
+                                            }
                                         }
                                     }
                                 }
