@@ -17,6 +17,10 @@ jobs:
       - name: Display the path
         run: echo %PATH%
         shell: cmd
+      - name: Configure cmd
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: mklink "C:\windows\system32\cmd.EXE" "cmd.EXE"
       - name: Build Binary
         shell: cmd
         run: call .\Build.cmd
