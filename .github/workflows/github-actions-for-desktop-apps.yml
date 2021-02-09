@@ -61,8 +61,12 @@ jobs:
 
     # Build the Windows Application Packaging legacy
     - name: Build the Windows Application Packaging Project legacy (wapproj)
-      run: msbuild Solution_Path -noConsoleLogger  -nologo -noAutoResponse /p:Configuration=Release
-      
+      run: msbuild $env:Solution_Path -noConsoleLogger  -nologo -noAutoResponse /p:Configuration=Release
+      env:
+        AppxBundle: Never
+        BuildMode: SideloadOnly
+        Configuration: Debug
+        TargetPlatform: ${{ matrix.targetplatform }}
       
     # Build the Windows Application Packaging project
     - name: Build the Windows Application Packaging Project (wapproj)
