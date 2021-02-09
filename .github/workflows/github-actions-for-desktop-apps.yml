@@ -61,7 +61,7 @@ jobs:
 
     # Build the Windows Application Packaging legacy
     - name: Build the Windows Application Packaging Project legacy (wapproj)
-      run: msbuild -m $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration -noConsoleLogger  -nologo -noAutoResponse /p:Configuration=Release
+      run: msbuild -m $env:Wpf_Project_Path /p:Platform=$env:TargetPlatform -p:Configuration=Debug;TargetFrameworkVersion=v4.5
       env:
         AppxBundle: Never
         BuildMode: SideloadOnly
