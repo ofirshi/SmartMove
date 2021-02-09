@@ -25,6 +25,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.108
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+    - name: Restore packages
+      run: nuget restore SmartMove.sln
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Build with MSBuild
+      run: msbuild  SmartMove.sln -p:Configuration=Release  
     - name: First build it with dotnet
       run: dotnet build --configuration Release
     - name: And then we test it
