@@ -14,11 +14,9 @@ jobs:
         shell: powershell
         run: Install-Module 7Zip4PowerShell -Force -Verbose
       - uses: actions/checkout@v2
-      steps:
       - name: Display the path
         run: echo %PATH%
         shell: cmd
-
       - name: Build Binary
         shell: cmd
         run: call .\Build.cmd
