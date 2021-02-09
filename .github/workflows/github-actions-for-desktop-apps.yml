@@ -49,6 +49,7 @@ jobs:
       uses: aarnott/nbgv@v0.3
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        DOTNET_CLI_TELEMETRY_OPTOUT : 'true'
         DISABLEOUTOFPROCTASKHOST : '1'
       with:
         setAllVars: true
@@ -62,12 +63,12 @@ jobs:
       with:
         #dotnet-version: '3.1.302'
         dotnet-version: ${{ matrix.dotnet-version }}
-    - name: Create Certificate
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT : 'true'
-      run: |
-          dotnet dev-certs https --clean -q 
-          #dotnet dev-certs https --trust
+    #- name: Clean Certificate
+    #  env:
+    #    DOTNET_CLI_TELEMETRY_OPTOUT : 'true'
+    #  run: |
+    #      dotnet dev-certs https --clean -q 
+    #      dotnet dev-certs https --trust -q 
           
     #- name: Install dependencies
     #  run: dotnet add package Newtonsoft.Json --version 12.0.1
