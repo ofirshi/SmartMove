@@ -52,13 +52,6 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.1
 
-    # Restore the application
-    - name:  Restore the Wpf application to populate the obj folder
-      run: msbuild $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
-      env:
-        Configuration: Debug
-        RuntimeIdentifier: win-${{ matrix.targetplatform }}
-
     # Build the Windows Application Packaging legacy
     - name: Build the Windows Application Packaging Project legacy (wapproj)
       run: msbuild -m $env:Wpf_Project_Path /p:Platform=$env:TargetPlatform -p:Configuration=Debug
