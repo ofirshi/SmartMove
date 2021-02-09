@@ -8,13 +8,17 @@ on:
 jobs:
   create_release:
     name: Create GitHub Release
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Install 7Zip PowerShell Module
         shell: powershell
         run: Install-Module 7Zip4PowerShell -Force -Verbose
       - uses: actions/checkout@v2
-      
+      steps:
+      - name: Display the path
+        run: echo %PATH%
+        shell: cmd
+
       - name: Build Binary
         shell: cmd
         run: call .\Build.cmd
