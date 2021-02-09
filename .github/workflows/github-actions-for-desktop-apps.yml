@@ -46,6 +46,10 @@ jobs:
       uses: aarnott/nbgv@v0.3
       with:
         setAllVars: true
+      envs:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        DISABLEOUTOFPROCTASKHOST : '1'
+        
 
     # Install the .NET Core workload
     - name: Install .NET Core
