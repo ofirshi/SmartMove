@@ -41,6 +41,12 @@ jobs:
         id: step_one
         run: |
             echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
+            
+    - name: Set DISABLEOUTOFPROCTASKHOST to 1
+        id: step_one
+        run: |
+            echo "DISABLEOUTOFPROCTASKHOST=1" >> $GITHUB_ENV
+
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
