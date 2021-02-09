@@ -1,11 +1,12 @@
 name: NetLicensing C# Client - Release
 
 on:
-  workflow_run:
-    workflows: ["NetLicensing C# Client - CI"]
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
     branches: [ master ]
-    types:
-      - completed
+  pull_request:
+    branches: [ master ]
+
 
 jobs:
   publish-nuget:
