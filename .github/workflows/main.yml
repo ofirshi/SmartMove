@@ -16,27 +16,29 @@ on:
   
 jobs:
   build:
-    runs-on: windows-latest
-    name: Build
- 
-    steps:
-    - uses: actions/checkout@v1
-      name: Checkout Code
+    runs-on: windows-2019
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Build DotNET35
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\pathtoyoursolutionorproject
      
-    - name: Setup MSBuild Path
-      uses: warrenbuckley/Setup-MSBuild@v1
-       
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
-     
-    - name: Restore NuGet Packages
-      run: nuget restore SmartMove.sln
- 
-    - name: Build and Publish Web App
-      run: msbuild SmartMove.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
- 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: published_webapp
-        path: bin\Release\Publish
+      - name: Setup MSBuild Path
+        uses: warrenbuckley/Setup-MSBuild@v1
+           
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.2
+         
+      - name: Restore NuGet Packages
+        run: nuget restore SmartMove.sln
+     
+      - name: Build and Publish Web App
+        run: msbuild SmartMove.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+     
+        - name: Upload Artifact
+          uses: actions/upload-artifact@v1.0.0
+          with:
+            name: published_webapp
+            path: bin\Release\Publish
