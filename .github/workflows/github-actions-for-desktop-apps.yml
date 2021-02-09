@@ -16,12 +16,17 @@ on:
       - master
 
 jobs:
-
-  build:
-
+  setup-version:
+    runs-on: ${{ matrix.operating-system }}
     strategy:
+      fail-fast: false
+  #build:
+    #strategy:
       matrix:
         targetplatform: [x86, x64]
+        configuration: [Debug, Release]
+        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+        dotnet-version: ['2.1', '2.2', '3.0', '3.1', '5.0']
 
     runs-on: windows-latest
 
@@ -46,7 +51,8 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.302'
+        #dotnet-version: '3.1.302'
+        dotnet-version: ${{ matrix.dotnet-version }}
 
     # Add  MsBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
@@ -59,6 +65,6 @@ jobs:
       env:
         AppxBundle: Never
         BuildMode: SideloadOnly
-        Configuration: Debug
+        Configuration: ${{ matrix.configuration }}
         AnyPlatform: "Any CPU"
 
