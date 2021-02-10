@@ -28,9 +28,9 @@ jobs:
   setup-version:
     runs-on: ${{ matrix.operating-system }}
     env:
-    DOTNET_NOLOGO: true
-    DOTNET_CLI_TELEMETRY_OPTOUT: true
-    DOTNET_MULTILEVEL_LOOKUP: true
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_MULTILEVEL_LOOKUP: true
     strategy:
       fail-fast: false
   #build:
