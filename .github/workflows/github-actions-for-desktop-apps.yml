@@ -33,16 +33,10 @@ jobs:
     #strategy:
       matrix:
         targetplatform: [x86, x64]
-        configuration: [Debug]
-        #configuration:  Release
-        #operating-system: [ubuntu-latest, windows-latest, macOS-latest]
-        operating-system: [windows-latest]
-        #dotnet-version: ['2.1', '2.2' , '2.2.103', '3.0', '3.1', '3.1.x' , '5.0']
-        dotnet-version: ['2.2' ,'3.1.x' , '5.0']
-        #python: [2.7, 3.5, 3.6, 3.7, 3.8]
-        #experimental: [false]
+        configuration: [Debug] #configuration:  [Debug, Release]
+        operating-system: [windows-latest] #operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+        dotnet-version: ['2.2' ,'3.1.x' , '5.0'] #dotnet-version: ['2.1', '2.2' , '2.2.103', '3.0', '3.1', '3.1.x' , '5.0']
 
-    #runs-on: windows-latest
 
     env:
       Solution_Path: SmartMove.sln
@@ -72,17 +66,7 @@ jobs:
       #uses: actions/setup-dotnet@v1
       uses: actions/setup-dotnet@v1.6.0
       with:
-        #dotnet-version: '3.1.302'
         dotnet-version: ${{ matrix.dotnet-version }}
-    #- name: Clean Certificate
-    #  env:
-    #    DOTNET_CLI_TELEMETRY_OPTOUT : 'true'
-    #  run: |
-    #      dotnet dev-certs https --clean -q 
-    #      dotnet dev-certs https --trust -q 
-          
-    #- name: Install dependencies
-    #  run: dotnet add package Newtonsoft.Json --version 12.0.1
 
     - name: Display dotnet version
       run: dotnet --version
@@ -97,12 +81,18 @@ jobs:
     - name: Nuget install
       run: nuget install Microsoft.Xaml.Behaviors.Wpf
       # JetBrains.System.Windows.Interactivity
-      
 
-      
+    # Restore the application
+    - name:  Restore the Wpf application to populate the obj folder
+      run: msbuild $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+      env:
+        Configuration: Debug
+        RuntimeIdentifier: win-${{ matrix.targetplatform }}
+
+  
     # Build the Windows Application Packaging project
     - name: Build the Windows Application Packaging Project
-      run: msbuild $env:Solution_Path /p:Platform=$env:AnyPlatform -maxCpuCount:2 /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+      run: msbuild $env:Solution_Path /p:Platform=$env:AnyPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
       env:
         AppxBundle: Never
         BuildMode: SideloadOnly
