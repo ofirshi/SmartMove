@@ -26,11 +26,7 @@ on:
   
 jobs:
   setup-version:
-    runs-on: ${{ matrix.operating-system }}
-    env:
-      DOTNET_NOLOGO: true
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_MULTILEVEL_LOOKUP: true
+    runs-on: ${{ matrix.operating-system }}     
     strategy:
       fail-fast: false
   #build:
@@ -52,6 +48,10 @@ jobs:
       Solution_Path: SmartMove.sln
       Wpf_Project_Path: SmartMove\SmartMove.csproj
       Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_MULTILEVEL_LOOKUP: true
+      DISABLEOUTOFPROCTASKHOST : '1'
 
     steps:
     - name: Checkout
@@ -61,11 +61,7 @@ jobs:
 
     # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
     - name: Use Nerdbank.GitVersioning to set version variables
-      uses: aarnott/nbgv@v0.3
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        DOTNET_CLI_TELEMETRY_OPTOUT : 'true'
-        DISABLEOUTOFPROCTASKHOST : '1'
+      uses: aarnott/nbgv@v0.3       
       with:
         setAllVars: true
       
