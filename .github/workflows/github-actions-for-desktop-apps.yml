@@ -47,11 +47,6 @@ jobs:
     env:
       Solution_Path: SmartMove.sln
       Wpf_Project_Path: SmartMove\SmartMove.csproj
-      Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands
-      DOTNET_NOLOGO: true
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_MULTILEVEL_LOOKUP: true
-      DISABLEOUTOFPROCTASKHOST : '1'
 
     steps:
     - name: Checkout
@@ -67,8 +62,7 @@ jobs:
 
     # Install the .NET Core workload
     - name: Install .NET Core ${{ matrix.dotnet-version }}
-      #uses: actions/setup-dotnet@v1
-      uses: actions/setup-dotnet@v1.6.0
+      uses: actions/setup-dotnet@v1.6.0 #uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
 
@@ -86,8 +80,16 @@ jobs:
       uses: warrenbuckley/Setup-Nuget@v1
 
     - name: Nuget install
-      run: nuget install Microsoft.Xaml.Behaviors.Wpf
-      # JetBrains.System.Windows.Interactivity
+      run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
+      
+    
+    - name: Install 7Zip PowerShell Module
+      shell: powershell
+      run: Install-Module 7Zip4PowerShell -Force -Verbose
+    
+    - name: Display the path
+      run: echo %PATH%
+      shell: cmd
 
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
