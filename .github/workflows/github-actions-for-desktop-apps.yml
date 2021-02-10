@@ -23,7 +23,13 @@ on:
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+env:
+  Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_MULTILEVEL_LOOKUP: true
+  DISABLEOUTOFPROCTASKHOST : '1'
+      
 jobs:
   setup-version:
     runs-on: ${{ matrix.operating-system }}     
@@ -103,5 +109,3 @@ jobs:
         
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: true
