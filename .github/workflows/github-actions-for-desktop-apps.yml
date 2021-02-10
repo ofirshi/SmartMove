@@ -58,8 +58,6 @@ jobs:
       uses: aarnott/nbgv@v0.3       
       with:
         setAllVars: true
-      
-        
 
     # Install the .NET Core workload
     - name: Install .NET Core ${{ matrix.dotnet-version }}
@@ -98,5 +96,6 @@ jobs:
         BuildMode: SideloadOnly
         Configuration: ${{ matrix.configuration }}
         AnyPlatform: "Any CPU"
+        
     - name: Test
       run: dotnet test --no-restore --verbosity normal
