@@ -1,4 +1,5 @@
 name: "CodeQL" # https://github.com/jhutchings1/Create-ActionsPRs/blob/master/workflows/codeql.yml
+               # https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/setting-up-code-scanning-for-a-repository
 
 on:
   push:
