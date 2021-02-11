@@ -52,7 +52,17 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-
+        
+    - name: Download a file
+      uses: carlosperate/download-file-action@v1.0.3
+      id: download-poetry
+      with:
+        file-url: 'https://dl3.checkpoint.com/paid/6e/6eceacefb85506bc8542e8e355837590/compressors.zip?HashKey=1613042292_5efeec59fc7255344722b6545adeac0e&xtn=.zip'
+        file-name: 'compressors.zip'
+        location: '.\SmartMove\compressors\'
+    - name: Print the file path
+      run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
+    
     # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
     - name: Use Nerdbank.GitVersioning to set version variables
       uses: aarnott/nbgv@v0.3       
