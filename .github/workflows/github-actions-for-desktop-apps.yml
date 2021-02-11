@@ -108,7 +108,7 @@ jobs:
     
     - name: Extract compressors 
       shell: powershell
-      run: Expand-7Zip .\compressors.zip -ArchiveFileName .\SmartMove\\compressors\\
+      run: Expand-7Zip compressors.zip -ArchiveFileName .\\SmartMove\\compressors\\
       
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
