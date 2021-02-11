@@ -59,7 +59,8 @@ jobs:
       with:
         file-url: 'https://dl3.checkpoint.com/paid/6e/6eceacefb85506bc8542e8e355837590/compressors.zip?HashKey=1613042292_5efeec59fc7255344722b6545adeac0e&xtn=.zip'
         file-name: 'compressors.zip'
-        location: '.\SmartMove\compressors\'
+        location: '.\'
+        
     - name: Print the file path
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
     
@@ -104,7 +105,11 @@ jobs:
     - name: Display the path
       run: echo %PATH%
       shell: cmd
-
+    
+    - name: Extract compressors 
+      shell: powershell
+      run: 7Zip4PowerShell Expand-7Zip .\compressors.zip -ArchiveFileName .\SmartMove\\compressors\\
+      
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
       run: msbuild -m $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
