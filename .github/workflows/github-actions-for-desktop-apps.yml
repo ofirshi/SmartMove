@@ -93,6 +93,9 @@ jobs:
     - name: Nuget install
       run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
       
+    - name: Install NuGet PowerShell PackageProvider
+      shell: powershell
+      run: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Verbose
     
     - name: Install 7Zip PowerShell Module
       shell: powershell
