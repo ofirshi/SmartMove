@@ -142,7 +142,7 @@ jobs:
     - uses: github/codeql-action/upload-sarif@v1
       with:
         # Path to SARIF file relative to the root of the repository
-        sarif_file: csharp-builtin.sarif    
+        sarif_file: D:\\a\\SmartMove\\SmartMove\\csharp-builtin.sarif    
       
     # Test Build the Windows Application  
     - name: Test
