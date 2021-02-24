@@ -142,10 +142,13 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
-    - uses: actions/upload-artifact@v2
+    - name: 'Accidently upload to the same artifact via multiple jobs'
+      uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
-        path: SmartMove\SmartMove\bin\Debug\*
+        name: SmartMove.exe
+        path: ${{ github.workspace }}\bin\Debug\*
+        retention-days: 5
+        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn` 
 
     
     # Initializes the CodeQL tools for scanning
