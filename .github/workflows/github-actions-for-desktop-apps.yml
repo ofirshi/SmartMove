@@ -53,12 +53,23 @@ jobs:
       uses: carlosperate/download-file-action@v1.0.3
       id: download-poetry
       with:
-        file-url: 'https://dl3.checkpoint.com/paid/6e/6eceacefb85506bc8542e8e355837590/compressors.zip?HashKey=1613042292_5efeec59fc7255344722b6545adeac0e&xtn=.zip'
+        file-url: 'http://downloads.checkpoint.com/dc/download.htm?ID=110747'
         file-name: 'compressors.zip'
         location: '.\SmartMove\'
-        
-    - name: Print the file path
+    
+    - name: Print the file path download-file-action
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
+      
+    - uses: suisei-cn/actions-download-file@v1
+      id: downloadfile  # Remember to give an ID if you need the output
+      name: Download the file
+      with:
+        url: "http://downloads.checkpoint.com/dc/download.htm?ID=110747"
+        target: SmartMove\
+        auto-match: false
+
+    - name: Print the file path actions-download-file
+      run: echo "The file was downloaded to ${{ steps.downloadfile.outputs.file-path }}"
     
     # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
     - name: Use Nerdbank.GitVersioning to set version variables
