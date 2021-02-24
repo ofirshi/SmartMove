@@ -98,10 +98,12 @@ jobs:
       
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
-
+      
     - name: PowerShell enable TLS v1.2
       shell: pwsh
-      run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
+      run: |
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 
     - name: Nuget install
       run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
