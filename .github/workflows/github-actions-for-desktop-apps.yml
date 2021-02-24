@@ -58,6 +58,14 @@ jobs:
         file-name: 'compressors.zip'
         location: 'SmartMove\'
     
+    - name: Download shiftleft 32bit
+      uses: carlosperate/download-file-action@v1.0.3
+      id: download-shiftleft
+      with:
+        file-url: 'https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/windows/386/0.0.24/shiftleft.exe'
+        file-name: 'shiftleft.exe'
+        location: 'SmartMove\'
+        
     - name: Print the file path download-file-action
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
       
@@ -138,6 +146,9 @@ jobs:
         Configuration: ${{ matrix.configuration }}
         AnyPlatform: "Any CPU"
         DeployExtension: False
+    
+    - name: run shiftleft
+      run: SmartMove\shiftleft.exe --update=false -e "CHKP_CLOUDGUARD_ID=${{ secrets.CHKP_CLOUDGUARD_ID }}" -e "CHKP_CLOUDGUARD_SECRET=${{ secrets.CHKP_CLOUDGUARD_SECRET }}" code-scan -s ./ -nc -nb
     
     - name: 'Accidently upload to the same artifact via multiple jobs'
       uses: actions/upload-artifact@v2
