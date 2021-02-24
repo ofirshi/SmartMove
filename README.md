@@ -1,5 +1,6 @@
 # SmartMove
 [![.NET](https://github.com/ofirshi/SmartMove/actions/workflows/github-actions-for-desktop-apps.yml/badge.svg?branch=master)](https://github.com/ofirshi/SmartMove/actions/workflows/github-actions-for-desktop-apps.yml)
+
 Check Point SmartMove tool enables you to convert 3rd party database with firewall security policy and NAT to Check Point database.
 
 At the moment, the tool parses Cisco ASA, Juniper JunosOS/ScreenOS, Fortinet FortiOS, PaloAlto PAN-OS and PaloAlto Panorama configurations and converts the objects, NAT and firewall policy to a Check Point R80.10 compliant policy. The tool is planned to support additional vendors and security configurations in the future.
