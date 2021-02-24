@@ -146,9 +146,9 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: SmartMove.exe
-        path: ${{ github.workspace }}\bin\Debug\*
+        path: ${{ github.workspace }}SmartMove\bin\Debug\SmartMove.exe
         retention-days: 5
-        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn` 
+        if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn` 
 
     
     # Initializes the CodeQL tools for scanning
