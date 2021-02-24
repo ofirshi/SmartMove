@@ -68,9 +68,6 @@ jobs:
         url: "http://downloads.checkpoint.com/dc/download.htm?ID=110747"
         target: SmartMove\
         auto-match: false
-
-    - name: Print the file path actions-download-file
-      run: echo "The file was downloaded to ${{ steps.downloadfile.outputs.file-path }}"
     
     # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
     - name: Use Nerdbank.GitVersioning to set version variables
