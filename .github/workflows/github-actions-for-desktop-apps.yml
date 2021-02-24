@@ -147,7 +147,7 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
-    - name: run shiftleft
+    - name: Run shiftleft
       run: SmartMove\shiftleft.exe --update=false -e "CHKP_CLOUDGUARD_ID=${{ secrets.CHKP_CLOUDGUARD_ID }}" -e "CHKP_CLOUDGUARD_SECRET=${{ secrets.CHKP_CLOUDGUARD_SECRET }}" code-scan -s ./ -nc -nb
     
     - name: 'Accidently upload to the same artifact via multiple jobs'
