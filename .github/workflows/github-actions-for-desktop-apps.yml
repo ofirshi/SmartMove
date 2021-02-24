@@ -120,7 +120,7 @@ jobs:
     
     - name: Extract compressors 
       shell: powershell
-      run: Expand-7Zip -ArchiveFileName ${{ github.workspace }}\compressors.zip  -TargetPath .${{ github.workspace }}\SmartMove\compressors\
+      run: Expand-7Zip -ArchiveFileName .\SmartMove\compressors.zip  -TargetPath .\SmartMove\SmartMove\compressors\
       
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
