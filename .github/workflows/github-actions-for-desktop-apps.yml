@@ -159,5 +159,5 @@ jobs:
       uses: github/codeql-action/analyze@v1
           
     # Test Build the Windows Application  
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+    #- name: Test
+    #  run: dotnet test --no-restore --verbosity normal
