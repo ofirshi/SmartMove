@@ -142,8 +142,11 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
-    - name: Run Fake
-      run: dotnet fake build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: SmartMove\SmartMove\bin\Debug\*
+
     
     # Initializes the CodeQL tools for scanning
     - name: Initialize CodeQL
