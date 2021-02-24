@@ -110,7 +110,7 @@ jobs:
       run: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Verbose -Scope CurrentUser
     
     - name: Install 7Zip PowerShell Module
-      shell: powershell
+      shell: pwsh # powershell
       run: Install-Module 7Zip4PowerShell -Force -Verbose -Scope CurrentUser -AllowClobber
     
     - name: Display the path
@@ -119,7 +119,7 @@ jobs:
     
     #- name: Extract compressors 
     #  shell: powershell
-    #  run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath \SmartMove\SmartMove\compressors\
+    #  run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath SmartMove\SmartMove\compressors
       
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
