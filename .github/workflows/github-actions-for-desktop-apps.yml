@@ -49,11 +49,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-        
-        
-    - name: Fetch all history for all tags and branches
-      run: git fetch --prune --unshallow
-        
+               
     - name: Download a file
       uses: carlosperate/download-file-action@v1.0.3
       id: download-poetry
