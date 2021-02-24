@@ -120,9 +120,9 @@ jobs:
       run: echo %PATH%
       shell: cmd
     
-    #- name: Extract compressors 
-    #  shell: powershell
-    #  run: Expand-7Zip -ArchiveFileName .\SmartMove\compressors.zip  -TargetPath .\SmartMove\compressors\
+    - name: Extract compressors 
+      shell: powershell
+      run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath \SmartMove\SmartMove\compressors\
       
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
@@ -146,7 +146,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: SmartMove.exe
-        path: ${{ github.workspace }}SmartMove\bin\Debug\SmartMove.exe
+        path: ${{ github.workspace }}\bin\Debug\SmartMove.exe
         retention-days: 5
         if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn` 
 
