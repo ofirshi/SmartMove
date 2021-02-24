@@ -1,11 +1,7 @@
-# Copyright (c) Microsoft Corporation.
-# Licensed under the MIT license.
-
-# This continuous integration pipeline is triggered anytime a user pushes code to the repo.
-# This pipeline builds the Wpf project, runs unit tests, then saves the MSIX build artifact.
 name:  Wpf Continuous Integration
 
 # https://github.com/microsoft/github-actions-for-desktop-apps/blob/main/.github/workflows/ci.yml
+
 # Trigger on every master branch push and pull request
 on:
   push:
@@ -59,7 +55,7 @@ jobs:
       with:
         file-url: 'https://dl3.checkpoint.com/paid/6e/6eceacefb85506bc8542e8e355837590/compressors.zip?HashKey=1613042292_5efeec59fc7255344722b6545adeac0e&xtn=.zip'
         file-name: 'compressors.zip'
-        location: '.\'
+        location: './'
         
     - name: Print the file path
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
@@ -91,24 +87,28 @@ jobs:
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
 
+    - name: PowerShell enable TLS v1.2
+      shell: powershell
+      run: [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
+
     - name: Nuget install
       run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
       
     - name: Install NuGet PowerShell PackageProvider
       shell: powershell
-      run: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Verbose
+      run: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Verbose -Scope CurrentUser
     
     - name: Install 7Zip PowerShell Module
       shell: powershell
-      run: Install-Module 7Zip4PowerShell -Force -Verbose
+      run: Install-Module 7Zip4PowerShell -Force -Verbose -Scope CurrentUser -AllowClobber
     
     - name: Display the path
       run: echo %PATH%
       shell: cmd
     
-    #- name: Extract compressors 
-    #  shell: powershell
-    #  run: Expand-7Zip compressors.zip -ArchiveFileName .\\SmartMove\\compressors\\
+    - name: Extract compressors 
+      shell: powershell
+      run: Expand-7Zip -ArchiveFileName .\compressors.zip  -TargetPath .\SmartMove\SmartMove\compressors\
       
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
