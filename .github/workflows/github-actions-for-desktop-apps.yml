@@ -12,6 +12,7 @@ on:
       - '**.md'
       - '**.yml'
   pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches:
       - master
     paths-ignore:
@@ -59,7 +60,7 @@ jobs:
       with:
         file-url: 'http://downloads.checkpoint.com/dc/download.htm?ID=110747'
         file-name: 'compressors.zip'
-        location: '.\SmartMove\'
+        location: '${{ github.workspace }}'
     
     - name: Print the file path download-file-action
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
@@ -69,7 +70,7 @@ jobs:
       name: Download the file
       with:
         url: "http://downloads.checkpoint.com/dc/download.htm?ID=110747"
-        target: SmartMove\
+        target: ${{ github.workspace }}
         auto-match: false
 
     - name: Print the file path actions-download-file
@@ -123,7 +124,7 @@ jobs:
     
     - name: Extract compressors 
       shell: powershell
-      run: Expand-7Zip -ArchiveFileName .\SmartMove\\compressors.zip  -TargetPath .\SmartMove\SmartMove\compressors\
+      run: Expand-7Zip -ArchiveFileName ${{ github.workspace }}\compressors.zip  -TargetPath .${{ github.workspace }}\SmartMove\compressors\
       
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
