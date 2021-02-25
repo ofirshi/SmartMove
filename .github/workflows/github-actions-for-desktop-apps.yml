@@ -43,6 +43,7 @@ jobs:
         configuration: [Debug] #configuration:  [Debug, Release]
         operating-system: [windows-latest] #operating-system: [ubuntu-latest, windows-latest, macOS-latest]
         dotnet-version: ['1.0' ,'1.1' , '2.2' ,'3.1.x' , '5.0'] #dotnet-version: ['2.1', '2.2' , '2.2.103', '3.0', '3.1', '3.1.x' , '5.0']
+        language: ['csharp', 'python']
 
     steps:
     - name: Checkout
@@ -155,7 +156,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
-        languages: csharp, python
+        languages: ${{ matrix.language }}
         setup-python-dependencies: true
   
     # Build the Windows Application Packaging project
@@ -175,9 +176,10 @@ jobs:
         CHKP_CLOUDGUARD_SECRET: ${{ secrets.CHKP_CLOUDGUARD_SECRET }}
       run: |
         SmartMove\shiftleft.exe --update=false code-scan -s ./ -nb -D -sev=High -D -x=ScreenOSParser.cs -x=CiscoCommands.cs -x=JuniperObjects.cs -x=IPRange.cs -x=JuniperConverter.cs -x=FortiGateConverter.cs -x=VendorConverter.cs -x=SmartMove.exe.config
-            
-    #- name: Autobuild
-    #  uses: github/codeql-action/autobuild@v1
+    
+    - if: matrix.language == 'csharp' 
+      name: Autobuild
+      uses: github/codeql-action/autobuild@v1
     
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
