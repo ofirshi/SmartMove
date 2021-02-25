@@ -189,7 +189,8 @@ jobs:
     #- name: Test
     #  run: dotnet test --no-restore --verbosity normal
     
-    - name: Upload Artifact
+    - if: matrix.language == 'csharp' 
+      name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: SmartMove-${{ matrix.dotnet-version }}-${{ matrix.targetplatform }}
