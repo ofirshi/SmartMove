@@ -98,7 +98,7 @@ jobs:
       with:
         vs-version: '[16.8,16.9)' # https://cezarypiatek.github.io/post/develop-vsextension-with-github-actions/
         
-    - name: echo MSBuild
+    - name: MSBuild Version
       run: msbuild -version
       
     - name: Setup Nuget.exe
