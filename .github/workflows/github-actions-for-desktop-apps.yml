@@ -147,12 +147,14 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
-    - name: Set shiftleft 
+    - name: Run shiftleft
+      shell: cmd
+      env:
+        CHKP_CLOUDGUARD_ID: ${{ secrets.CHKP_CLOUDGUARD_ID }}
+        CHKP_CLOUDGUARD_SECRET: ${{ secrets.CHKP_CLOUDGUARD_SECRET }}
       run: |
-        set CHKP_CLOUDGUARD_ID=${{ secrets.CHKP_CLOUDGUARD_ID }}
-        set CHKP_CLOUDGUARD_SECRET=${{ secrets.CHKP_CLOUDGUARD_SECRET }}
         SmartMove\shiftleft.exe --update=false code-scan -s ./ -nc -nb -r 64
-      
+         
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
