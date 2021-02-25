@@ -153,7 +153,7 @@ jobs:
         CHKP_CLOUDGUARD_ID: ${{ secrets.CHKP_CLOUDGUARD_ID }}
         CHKP_CLOUDGUARD_SECRET: ${{ secrets.CHKP_CLOUDGUARD_SECRET }}
       run: |
-        SmartMove\shiftleft.exe --update=false code-scan -s ./ -nb -D -sev=High -D -x=ScreenOSParser.cs -x=CiscoCommands.cs -x=JuniperObjects.cs -x=IPRange.cs -x=JuniperConverter.cs -x=FortiGateConverter.cs -x=VendorConverter.cs
+        SmartMove\shiftleft.exe --update=false code-scan -s ./ -nb -D -sev=High -D -x=ScreenOSParser.cs -x=CiscoCommands.cs -x=JuniperObjects.cs -x=IPRange.cs -x=JuniperConverter.cs -x=FortiGateConverter.cs -x=VendorConverter.cs -x=SmartMove.exe.config
          
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
