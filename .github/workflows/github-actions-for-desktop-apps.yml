@@ -109,7 +109,6 @@ jobs:
       run: |
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-
     - name: Nuget install
       run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
       
@@ -128,14 +127,36 @@ jobs:
     #- name: Extract compressors 
     #  shell: pwsh # powershell
     #  run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath SmartMove\SmartMove\compressors
-      
+    
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install argparse
+        pip install json
+        # Set the `CODEQL-PYTHON` environment variable to the Python executable
+        # that includes the dependencies
+        echo "CODEQL_PYTHON=$(which python)" >> $GITHUB_ENV
+
+
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
       run: msbuild -m $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
       env:
         Configuration: Debug
         RuntimeIdentifier: win-${{ matrix.targetplatform }}
-
+    
+    #Initializes the CodeQL tools for scanning
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: csharp, python
+        setup-python-dependencies: true
   
     # Build the Windows Application Packaging project
     - name: Build the Windows Application Packaging Project
@@ -147,7 +168,7 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
-    - name: Run shiftleft
+    - name: Run Check Point code-scan
       shell: cmd
       env:
         CHKP_CLOUDGUARD_ID: ${{ secrets.CHKP_CLOUDGUARD_ID }}
@@ -155,6 +176,19 @@ jobs:
       run: |
         SmartMove\shiftleft.exe --update=false code-scan -s ./ -nb -D -sev=High -D -x=ScreenOSParser.cs -x=CiscoCommands.cs -x=JuniperObjects.cs -x=IPRange.cs -x=JuniperConverter.cs -x=FortiGateConverter.cs -x=VendorConverter.cs -x=SmartMove.exe.config
          
+     
+      
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+          
+          
+    # Test Build the Windows Application  
+    #- name: Test
+    #  run: dotnet test --no-restore --verbosity normal
+    
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -162,18 +196,3 @@ jobs:
         path: ${{ github.workspace }}\bin\Debug\SmartMove.exe
         retention-days: 5
         if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn`
-
-    
-    # Initializes the CodeQL tools for scanning
-    #- name: Initialize CodeQL
-    #  uses: github/codeql-action/init@v1   
-      
-    #- name: Autobuild
-    #  uses: github/codeql-action/autobuild@v1
-    
-    #- name: Perform CodeQL Analysis
-    #  uses: github/codeql-action/analyze@v1
-          
-    # Test Build the Windows Application  
-    #- name: Test
-    #  run: dotnet test --no-restore --verbosity normal
