@@ -144,7 +144,6 @@ jobs:
         # that includes the dependencies
         echo "CODEQL_PYTHON=$(which python)" >> $GITHUB_ENV
 
-
     # Restore the application
     - name:  Restore the Wpf application to populate the obj folder
       run: msbuild -m $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
