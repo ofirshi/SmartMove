@@ -147,16 +147,13 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
-    - name: Set CHKP_CLOUDGUARD_ID
-      run: set CHKP_CLOUDGUARD_ID ${{ secrets.CHKP_CLOUDGUARD_ID }}
+    - name: Set shiftleft 
+      run: |
+        setx CHKP_CLOUDGUARD_ID ${{ secrets.CHKP_CLOUDGUARD_ID }}
+        setx CHKP_CLOUDGUARD_SECRET ${{ secrets.CHKP_CLOUDGUARD_SECRET }}
+        SmartMove\shiftleft.exe --update=false code-scan -s ./ -nc -nb -r 64
       
-    - name: Set CHKP_CLOUDGUARD_SECRET 
-      run: set CHKP_CLOUDGUARD_SECRET ${{ secrets.CHKP_CLOUDGUARD_SECRET }} 
-      
-    - name: Run shiftleft
-      run: SmartMove\shiftleft.exe --update=false code-scan -s ./ -nc -nb -r 64
-    
-    - name: 'Accidently upload to the same artifact via multiple jobs'
+    - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: SmartMove.exe
