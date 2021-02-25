@@ -153,7 +153,7 @@ jobs:
         CHKP_CLOUDGUARD_ID: ${{ secrets.CHKP_CLOUDGUARD_ID }}
         CHKP_CLOUDGUARD_SECRET: ${{ secrets.CHKP_CLOUDGUARD_SECRET }}
       run: |
-        SmartMove\shiftleft.exe --update=false code-scan -s ./ -nb -r 10
+        SmartMove\shiftleft.exe --update=false code-scan -s ./ -nb
          
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
