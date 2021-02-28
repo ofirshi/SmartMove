@@ -140,8 +140,8 @@ jobs:
     #  shell: pwsh # powershell
     #  run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath SmartMove\SmartMove\compressors
     
-    - name: Extract compressors files
-      run: 7z e SmartMove\compressors.zip -aoa -oSmartMove\SmartMove\compressors\ * -r
+    #- name: Extract compressors files
+    #  run: 7z e SmartMove\compressors.zip -aoa -oSmartMove\SmartMove\compressors\ * -r
 
     - name: Set up Python
       uses: actions/setup-python@v2
