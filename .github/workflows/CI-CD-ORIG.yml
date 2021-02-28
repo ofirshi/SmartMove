@@ -180,6 +180,9 @@ jobs:
         AnyPlatform: "Any CPU"
         DeployExtension: False
     
+    - name: Check password
+      uses: AlicanAkkus/pinder-action@0.1
+
     - name: Run Check Point code-scan
       shell: cmd
       env:
