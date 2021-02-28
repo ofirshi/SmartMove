@@ -197,9 +197,9 @@ jobs:
         upload: false
     
     - name: Perform post-processing of CodeQL Analysis
-          uses: cwong-scw/post-process-sarif@v1
-          with:
-            sarif_file: '../results'
+      uses: cwong-scw/post-process-sarif@v1
+      with:
+        sarif_file: '../results'
     
     - name: Upload SARIF
       uses: github/codeql-action/upload-sarif@v1
