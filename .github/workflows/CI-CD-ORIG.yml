@@ -62,7 +62,7 @@ jobs:
     - if: matrix.targetplatform == 'x86'
       name: Download shiftleft 32bit
       uses: carlosperate/download-file-action@v1.0.3
-      id: download-shiftleft
+      id: download-shiftleft-x86
       with:
         file-url: 'https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/windows/386/0.0.24/shiftleft.exe'
         file-name: 'shiftleft.exe'
@@ -71,7 +71,7 @@ jobs:
     - if: matrix.targetplatform == 'x64'
       name: Download shiftleft 64bit
       uses: carlosperate/download-file-action@v1.0.3
-      id: download-shiftleft
+      id: download-shiftleft-x64
       with:
         file-url: 'https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/windows/amd64/0.0.24/shiftleft.exe'
         file-name: 'shiftleft.exe'
@@ -142,7 +142,6 @@ jobs:
     
     - name: Extract compressors files
       run: 7z e SmartMove\compressors.zip -aoa -oSmartMove\SmartMove\compressors\ * -r
-
 
     - name: Set up Python
       uses: actions/setup-python@v2
