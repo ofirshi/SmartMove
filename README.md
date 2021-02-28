@@ -1,5 +1,5 @@
 # SmartMove
-[![.NET](https://github.com/ofirshi/SmartMove/actions/workflows/github-actions-for-desktop-apps.yml/badge.svg?branch=master)](https://github.com/ofirshi/SmartMove/actions/workflows/github-actions-for-desktop-apps.yml)
+[![SmartMove-CI-CD](https://github.com/ofirshi/SmartMove/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/ofirshi/SmartMove/actions/workflows/CI-CD.yml)
 
 Check Point SmartMove tool enables you to convert 3rd party database with firewall security policy and NAT to Check Point database.
 
