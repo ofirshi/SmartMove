@@ -58,14 +58,25 @@ jobs:
         file-url: 'http://downloads.checkpoint.com/dc/download.htm?ID=110747'
         file-name: 'compressors.zip'
         location: 'SmartMove\'
-    
-    - name: Download shiftleft 32bit
+        
+    - if: matrix.targetplatform == 'x86'
+      name: Download shiftleft 32bit
       uses: carlosperate/download-file-action@v1.0.3
       id: download-shiftleft
       with:
         file-url: 'https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/windows/386/0.0.24/shiftleft.exe'
         file-name: 'shiftleft.exe'
         location: 'SmartMove\'
+    
+    - if: matrix.targetplatform == 'x64'
+      name: Download shiftleft 64bit
+      uses: carlosperate/download-file-action@v1.0.3
+      id: download-shiftleft
+      with:
+        file-url: 'https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/windows/amd64/0.0.24/shiftleft.exe'
+        file-name: 'shiftleft.exe'
+        location: 'SmartMove\'
+
         
     - name: Print the file path download-file-action
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
@@ -130,7 +141,7 @@ jobs:
     #  run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath SmartMove\SmartMove\compressors
     
     - name: Extract compressors files
-      run: 7z e SmartMove\compressors.zip -aoa -o SmartMove\SmartMove\compressors\ * -r
+      run: 7z e SmartMove\compressors.zip -aoa -oSmartMove\SmartMove\compressors\ * -r
 
 
     - name: Set up Python
