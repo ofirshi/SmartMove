@@ -57,7 +57,7 @@ jobs:
       with:
         file-url: 'http://downloads.checkpoint.com/dc/download.htm?ID=110747'
         file-name: 'compressors.zip'
-        location: 'SmartMove\'
+        location: '.'
         
     - if: matrix.targetplatform == 'x86'
       name: Download shiftleft 32bit
@@ -141,7 +141,7 @@ jobs:
     #  run: Expand-7Zip -ArchiveFileName SmartMove\compressors.zip  -TargetPath SmartMove\SmartMove\compressors
     
     - name: Extract compressors files
-      run: 7z e SmartMove\compressors.zip -aoa -oSmartMove\SmartMove\compressors\ * -r
+      run: 7z e compressors.zip -aoa -oSmartMove\SmartMove\compressors\ * -r
 
     - name: Set up Python
       uses: actions/setup-python@v2
