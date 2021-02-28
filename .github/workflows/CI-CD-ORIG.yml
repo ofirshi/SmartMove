@@ -57,7 +57,7 @@ jobs:
       with:
         file-url: 'http://downloads.checkpoint.com/dc/download.htm?ID=110747'
         file-name: 'compressors.zip'
-        location: '.'
+        location: 'SmartMove\'
         
     - if: matrix.targetplatform == 'x86'
       name: Download shiftleft 32bit
@@ -81,13 +81,13 @@ jobs:
     - name: Print the file path download-file-action
       run: echo "The file was downloaded to ${{ steps.download-poetry.outputs.file-path }}"
       
-    - uses: suisei-cn/actions-download-file@v1
-      id: downloadfile  # Remember to give an ID if you need the output
-      name: Download the file
-      with:
-        url: "http://downloads.checkpoint.com/dc/download.htm?ID=110747"
-        target: SmartMove\
-        auto-match: false
+    #- uses: suisei-cn/actions-download-file@v1
+    #  id: downloadfile  # Remember to give an ID if you need the output
+    #  name: Download the file
+    #  with:
+    #    url: "http://downloads.checkpoint.com/dc/download.htm?ID=110747"
+    #    target: SmartMove\
+    #    auto-match: false
     
     # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
     - name: Use Nerdbank.GitVersioning to set version variables
