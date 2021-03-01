@@ -16,5 +16,5 @@ jobs:
       with:
         source_repo: "chkp-yaelg/SmartMove"
         source_branch: "main"
-        destination_branch: "main"
+        destination_branch: "ofirshi/SmartMove"
         github_token: ${{ secrets.PAT }}
