@@ -20,7 +20,7 @@ jobs:
     - name: Git-version
       run: git version
     - name: Git-remote-add
-      run: git remote add yaelg https://github.com/chkp-yaelg/SmartMove.git
+      run: git remote add master https://github.com/chkp-yaelg/SmartMove.git
     - name: Git-fetch-all
       run: git fetch --all
     - name: Git-checkout-yaelg
