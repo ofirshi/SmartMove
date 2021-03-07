@@ -28,7 +28,8 @@ jobs:
             sudo apt-get update -y
             sudo apt-get install -y aspnetcore-runtime-5.0
             sudo apt-get install -y dotnet-runtime-5.0
-            sudo apt-get install monodevelop mono-gmcs -y
+            sudo apt-get install monodevelop mono-mcs mono-devel
+ -y
 
     - name: Run xbuild
       run : |
