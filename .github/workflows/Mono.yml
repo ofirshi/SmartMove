@@ -39,5 +39,5 @@ jobs:
       shell: bash
     - name: Run xbuild
       run : |
-            xbuild /p:Configuration=Release SmartMove/SmartMove.csproj
+            xbuild /p:Configuration=Release SmartMove.sln
       
