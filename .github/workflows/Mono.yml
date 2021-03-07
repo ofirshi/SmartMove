@@ -11,10 +11,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      env:
-          GITHUB_TOKEN: ${{ secrets.token }}
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+     
      - name: Install linux    
        run: |
             sudo apt-get update -y
