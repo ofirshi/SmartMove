@@ -1,5 +1,7 @@
 name: Mono
 
+# https://github.com/dotdevelop/dotdevelop/wiki/Linux-Mint-%28Ubuntu%29
+# https://github.com/lextm/dotdevelop/blob/centos7/.github/workflows/monodevelop.yml
 on: [push]
 
 jobs:
