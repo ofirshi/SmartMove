@@ -27,7 +27,7 @@ jobs:
             echo "deb https://d2nlctn12v279m.cloudfront.net/repo/mono/ubuntu bionic main" | sudo tee /etc/apt/sources.list.d/mono-extra.list  
             sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys CB2DE8E5
             sudo apt-get update -y
-            sudo apt install mono-complete	-y
+            sudo apt install monodevelop mono-mcs mono-devel mono-complete mono-dbg referenceassemblies-pcl ca-certificates-mono mono-xsp4 mono-complete -y
             sudo apt-get install -y wget openssl 
             sudo wget https://packages.microsoft.com/config/ubuntu/20.10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
             sudo dpkg -i packages-microsoft-prod.deb
