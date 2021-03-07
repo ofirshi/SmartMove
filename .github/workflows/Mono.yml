@@ -23,7 +23,7 @@ jobs:
             echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
             sudo apt update -y
             sudo apt-get update -y
-            sudo apt-get install -y mono-xbuild wget openssl 
+            sudo apt-get install -y wget openssl 
             sudo wget https://packages.microsoft.com/config/ubuntu/20.10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
             sudo dpkg -i packages-microsoft-prod.deb
             sudo apt-get update -y
@@ -35,7 +35,7 @@ jobs:
             sudo apt-get update -y
             sudo apt-get install -y aspnetcore-runtime-5.0
             sudo apt-get install -y dotnet-runtime-5.0
-            sudo apt-get install monodevelop mono-mcs mono-devel mono-devel mono-complete mono-dbg referenceassemblies-pcl ca-certificates-mono mono-xsp4 -y
+            sudo apt-get install monodevelop mono-mcs mono-devel mono-complete mono-dbg referenceassemblies-pcl ca-certificates-mono mono-xsp4 -y
             sudo apt-get install -y sed build-essential intltool fsharp gtk-sharp2
             sudo apt-get install -y software-properties-common
 
