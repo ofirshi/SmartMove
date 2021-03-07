@@ -29,13 +29,12 @@ jobs:
             sudo apt-get update -y
             sudo apt-get install -y apt-transport-https 
             sudo apt-get update -y
-            sudo apt-get install -y dotnet-sdk-5.0
+            sudo apt-get install -y dotnet-sdk-5.0 dotnet-runtime-5.0 aspnetcore-runtime-5.0
             sudo apt-get update -y 
             sudo apt-get install -y apt-transport-https
             sudo apt-get update -y
-            sudo apt-get install -y aspnetcore-runtime-5.0
-            sudo apt-get install -y dotnet-runtime-5.0
-            sudo apt-get install monodevelop mono-mcs mono-devel mono-complete mono-dbg referenceassemblies-pcl ca-certificates-mono mono-xsp4 -y
+            # sudo apt-get install monodevelop mono-mcs mono-devel mono-complete mono-dbg referenceassemblies-pcl ca-certificates-mono mono-xsp4 -y
+            sudo apt-get install mono-complete -y
             sudo apt-get install -y sed build-essential intltool fsharp gtk-sharp2
             sudo apt-get install -y software-properties-common
 
