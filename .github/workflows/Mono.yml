@@ -15,7 +15,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.token }}
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-      run: |
+     - name: Install linux    
+       run: |
             sudo apt-get update -y
             sudo apt-get install -y mono-xbuild wget
             wget https://packages.microsoft.com/config/ubuntu/20.10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
