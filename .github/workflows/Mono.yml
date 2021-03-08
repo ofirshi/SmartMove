@@ -32,7 +32,7 @@ jobs:
         echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
         sudo apt-get update -y
         sudo apt-get install -y sed build-essential intltool
-        sudo apt-get install -y software-properties-common mono-devel referenceassemblies-pcl ca-certificates-mono
+        sudo apt-get install -y software-properties-common referenceassemblies-pcl ca-certificates-mono
         sudo apt-get install mono-complete -y
         sudo add-apt-repository ppa:git-core/ppa -y
         sudo apt-get update -y 
