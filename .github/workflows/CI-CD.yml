@@ -97,7 +97,7 @@ jobs:
       
     # Build the Windows Application Packaging project
     - name: Build the Windows Application Packaging Project
-      run: msbuild -m $env:Solution_Path /p:Platform=$env:AnyPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /t:Rebuild
+      run: msbuild -m $env:Solution_Path /p:Platform=$env:AnyPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle # /t:Rebuild
       env:
         AppxBundle: Never
         BuildMode: SideloadOnly
