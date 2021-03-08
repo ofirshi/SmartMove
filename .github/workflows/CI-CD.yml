@@ -82,7 +82,7 @@ jobs:
       run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
     
     - name: Nuget install2   
-      run:  JetBrains.System.Windows.Interactivity
+      run:  nuget install JetBrains.System.Windows.Interactivity
       
     - name: Install NuGet PowerShell PackageProvider
       shell: powershell
