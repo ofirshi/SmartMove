@@ -1,0 +1,12 @@
+D:\tmp\SmartMove\bin\Debug\CP_KnownIcmpTypes.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownOtherPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownServiceGroups.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownTcpPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownUdpPorts.csv
+D:\tmp\SmartMove\bin\Debug\FortiGateMigration.dll
+D:\tmp\SmartMove\bin\Debug\FortiGateMigration.pdb
+D:\tmp\SmartMove\FortinetMigration\obj\Debug\FortiGateMigration.csprojAssemblyReference.cache
+D:\tmp\SmartMove\FortinetMigration\obj\Debug\FortiGateMigration.csproj.CoreCompileInputs.cache
+D:\tmp\SmartMove\FortinetMigration\obj\Debug\FortiGateMigration.csproj.CopyComplete
+D:\tmp\SmartMove\FortinetMigration\obj\Debug\FortiGateMigration.dll
+D:\tmp\SmartMove\FortinetMigration\obj\Debug\FortiGateMigration.pdb

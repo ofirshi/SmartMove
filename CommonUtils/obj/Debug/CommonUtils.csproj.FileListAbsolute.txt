@@ -1,0 +1,7 @@
+D:\tmp\SmartMove\bin\Debug\CommonUtils.dll
+D:\tmp\SmartMove\bin\Debug\CommonUtils.pdb
+D:\tmp\SmartMove\CommonUtils\obj\Debug\CommonUtils.csprojAssemblyReference.cache
+D:\tmp\SmartMove\CommonUtils\obj\Debug\CommonUtils.csproj.CoreCompileInputs.cache
+D:\tmp\SmartMove\CommonUtils\obj\Debug\CommonUtils.csproj.CopyComplete
+D:\tmp\SmartMove\CommonUtils\obj\Debug\CommonUtils.dll
+D:\tmp\SmartMove\CommonUtils\obj\Debug\CommonUtils.pdb

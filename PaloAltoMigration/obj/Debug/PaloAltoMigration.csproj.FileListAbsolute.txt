@@ -1,0 +1,13 @@
+D:\tmp\SmartMove\bin\Debug\CP_KnownIcmpTypes.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownOtherPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownServiceGroups.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownTcpPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownUdpPorts.csv
+D:\tmp\SmartMove\bin\Debug\PA_Apps_CP.csv
+D:\tmp\SmartMove\bin\Debug\PaloAltoMigration.dll
+D:\tmp\SmartMove\bin\Debug\PaloAltoMigration.pdb
+D:\tmp\SmartMove\PaloAltoMigration\obj\Debug\PaloAltoMigration.csprojAssemblyReference.cache
+D:\tmp\SmartMove\PaloAltoMigration\obj\Debug\PaloAltoMigration.csproj.CoreCompileInputs.cache
+D:\tmp\SmartMove\PaloAltoMigration\obj\Debug\PaloAltoMigration.csproj.CopyComplete
+D:\tmp\SmartMove\PaloAltoMigration\obj\Debug\PaloAltoMigration.dll
+D:\tmp\SmartMove\PaloAltoMigration\obj\Debug\PaloAltoMigration.pdb

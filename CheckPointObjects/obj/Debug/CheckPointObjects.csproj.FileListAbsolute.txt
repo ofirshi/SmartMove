@@ -1,0 +1,12 @@
+D:\tmp\SmartMove\bin\Debug\CP_KnownIcmpTypes.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownOtherPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownServiceGroups.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownTcpPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownUdpPorts.csv
+D:\tmp\SmartMove\bin\Debug\CheckPointObjects.dll
+D:\tmp\SmartMove\bin\Debug\CheckPointObjects.pdb
+D:\tmp\SmartMove\CheckPointObjects\obj\Debug\CheckPointObjects.csprojAssemblyReference.cache
+D:\tmp\SmartMove\CheckPointObjects\obj\Debug\CheckPointObjects.csproj.CoreCompileInputs.cache
+D:\tmp\SmartMove\CheckPointObjects\obj\Debug\CheckPointObjects.csproj.CopyComplete
+D:\tmp\SmartMove\CheckPointObjects\obj\Debug\CheckPointObjects.dll
+D:\tmp\SmartMove\CheckPointObjects\obj\Debug\CheckPointObjects.pdb

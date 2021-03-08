@@ -1,0 +1,14 @@
+D:\tmp\SmartMove\bin\Debug\CP_KnownIcmpTypes.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownOtherPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownServiceGroups.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownTcpPorts.csv
+D:\tmp\SmartMove\bin\Debug\CP_KnownUdpPorts.csv
+D:\tmp\SmartMove\bin\Debug\CiscoIcmpNameToType.csv
+D:\tmp\SmartMove\bin\Debug\CiscoNameToNumber.csv
+D:\tmp\SmartMove\bin\Debug\CiscoMigration.dll
+D:\tmp\SmartMove\bin\Debug\CiscoMigration.pdb
+D:\tmp\SmartMove\CiscoMigration\obj\Debug\CiscoMigration.csprojAssemblyReference.cache
+D:\tmp\SmartMove\CiscoMigration\obj\Debug\CiscoMigration.csproj.CoreCompileInputs.cache
+D:\tmp\SmartMove\CiscoMigration\obj\Debug\CiscoMigration.csproj.CopyComplete
+D:\tmp\SmartMove\CiscoMigration\obj\Debug\CiscoMigration.dll
+D:\tmp\SmartMove\CiscoMigration\obj\Debug\CiscoMigration.pdb
