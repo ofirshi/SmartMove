@@ -31,9 +31,11 @@ jobs:
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
         echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
         sudo apt-get update -y
+        sudo apt-get purge libmono* cli-common mono-runtime -y 
+        sudo apt autoremove -y
         sudo apt-get install -y sed build-essential intltool
+        sudo apt install -t vs-buster mono-complete -y
         sudo apt-get install -y software-properties-common referenceassemblies-pcl ca-certificates-mono
-        sudo apt-get install mono-complete -y
         sudo add-apt-repository ppa:git-core/ppa -y
         sudo apt-get update -y 
         sudo apt-get install -y git
