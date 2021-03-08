@@ -32,7 +32,7 @@ jobs:
         sudo apt autoremove -y
         sudo apt --fix-broken install -y
         sudo apt-get install -y sed build-essential intltool
-        sudo apt install mono-complete -y
+        sudo apt install mono-devel -y
         sudo apt-get install -y software-properties-common referenceassemblies-pcl ca-certificates-mono
         sudo add-apt-repository ppa:git-core/ppa -y
         sudo apt-get update -y 
