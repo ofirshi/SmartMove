@@ -33,7 +33,7 @@ jobs:
         sudo apt --fix-broken install -y
         sudo apt-get install -y sed build-essential intltool
         sudo apt-mark showhold 
-        sudo apt-get -o Debug::pkgProblemResolver=yes mono-complete 
+        sudo apt-get -o Debug::pkgProblemResolver=yes mono-devel 
         sudo apt-get install -y software-properties-common referenceassemblies-pcl ca-certificates-mono
         sudo add-apt-repository ppa:git-core/ppa -y
         sudo apt-get update -y 
