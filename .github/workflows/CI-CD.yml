@@ -81,8 +81,8 @@ jobs:
     - name: Nuget install
       run: nuget install Microsoft.Xaml.Behaviors.Wpf # JetBrains.System.Windows.Interactivity
     
-    #- name: Nuget install2   
-    #  run:  nuget install JetBrains.System.Windows.Interactivity
+    - name: Nuget install2   
+      run:  nuget install Expression.Blend.Sdk #JetBrains.System.Windows.Interactivity
       
     - name: Install NuGet PowerShell PackageProvider
       shell: powershell
