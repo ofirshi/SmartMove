@@ -39,5 +39,5 @@ jobs:
       shell: bash
     - name: Run msbuild
       run : |
-            msbuild /p:Configuration=Release SmartMove.sln
+            msbuild -m /p:Configuration=Debug SmartMove.sln
       
