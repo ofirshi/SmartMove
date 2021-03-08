@@ -41,6 +41,13 @@ jobs:
         sudo winetricks dotnet45
       # fsharp gtk-sharp2
       shell: bash
+      
+    - name: nuget
+      run: |
+           wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+           mono nuget.exe install
+      shell: bash
+    
     - name: Run msbuild
       run : |
             msbuild -m /p:Configuration=Debug SmartMove.sln      
